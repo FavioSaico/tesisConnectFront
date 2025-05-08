@@ -1,0 +1,21 @@
+
+@reference "tailwindcss";
+
+.container-auth {
+  @apply h-full w-full;
+}
+
+.container-login {
+  @apply max-w-[500px] mx-auto my-auto p-10 border rounded-[10px] mt-14;
+}
+
+.title {
+  @apply text-2xl font-bold text-center mb-10;
+}
+.title-register{
+  @apply text-2xl font-bold text-center mb-4
+}
+
+.button-auth {
+  @apply w-full
+}

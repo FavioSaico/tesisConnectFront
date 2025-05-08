@@ -3,31 +3,37 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+
+import "./auth.css";
 
 // esquema del formulario
 const formSchema = z.object({
-  username: z.string().min(2).max(50), // campo nombre
+  correo: z.string().email({
+    message: "Ingrese un correo electrónico válido"
+  }), // campo nombre
+  contrasenia: z.string().min(6, {
+    message: "Ingrese una contraseña válida"
+  }),
 })
 
 
 export const LoginPage = () => {
-
-  // 1. Define your form.
+  
   // useform se basa en el tipo definido en el schema
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema), // resolver para hacer las validaciones
     defaultValues: {
-      username: "",
+      correo: "",
+      contrasenia: "",
     },
   })
 
@@ -40,30 +46,52 @@ export const LoginPage = () => {
 
   // Queda hacer una revisión de la sesión
   return (
-    <>
-      <h1>Iniciar Sesión</h1>
-      {/* Form es el provider que pasa información de su contexto a sus hijos */}
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input placeholder="shadcn" {...field} />
-                </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Submit</Button>
-        </form>
-      </Form>
-    </>
+    <div className="container-auth">
+      <div className="container-login">
+        <h1 className="title">Iniciar sesión</h1>
+        {/* Form es el provider que pasa información de su contexto a sus hijos */}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex gap-10 flex-col">
+            <FormField
+              control={form.control}
+              name="correo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Correo electrónico</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Escribe tu correo electrónico" type="email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="contrasenia"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Contraseña</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Escribe tu contraseña" type="password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <a className="text-primary underline-offset-4 hover:underline cursor-pointer m-0 mx-auto">Ovildaste tu contraseña</a>
+            <Button variant="default" size="btnAuth" type="submit">Ingresar</Button>
+            <div className="inline-flex justify-center gap-1">
+              <p className="inline">
+                ¿Aún no tienes tu cuenta? <a 
+                  href="/auth/register"
+                  className="text-primary underline-offset-4 hover:underline cursor-pointer m-0"
+                >Crea tu cuenta</a>
+              </p>
+            </div>
+          </form>
+        </Form>
+      </div>
+    </div>
   )
 }

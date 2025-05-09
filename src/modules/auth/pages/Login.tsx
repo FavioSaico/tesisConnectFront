@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form"
 
 import "./auth.css";
+import { useNavigate } from "react-router"
 
 // esquema del formulario
 const formSchema = z.object({
@@ -32,16 +33,21 @@ export const LoginPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema), // resolver para hacer las validaciones
     defaultValues: {
-      correo: "",
-      contrasenia: "",
+      correo: "prueba@gmail.com",
+      contrasenia: "12311432234",
     },
   })
 
+  const navigate = useNavigate();
+
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
     // Tienen validación por su tipo de datos
-    console.log(values)
+    console.log(values);
+    
+    navigate({
+      pathname:'/profile'
+    }); 
   }
 
   // Queda hacer una revisión de la sesión

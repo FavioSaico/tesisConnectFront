@@ -7,7 +7,6 @@ import { Toaster } from "sonner"
 export const AppRouter = () => {
 
   const sessionContext = useSession()
-  console.log(sessionContext)
 
   return (
     <>
@@ -23,7 +22,7 @@ export const AppRouter = () => {
           : (
             <>
               <Route path="/profile/*" element={ <ProfileRoutes /> } />
-              <Route path='/*' element={ <Navigate to='/profile/*' />  } />
+              <Route path='/*' element={ <Navigate to='/profile' />  } />
             </>
           )
         }

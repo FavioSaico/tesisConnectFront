@@ -178,7 +178,7 @@ export const AcademicDataFrom: React.FC<Props> = ({setNextPage}) => {
             name="descripcion"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Descripción</FormLabel>
+                <FormLabel>Descripción personal</FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Ingresa una descripción"
@@ -196,7 +196,7 @@ export const AcademicDataFrom: React.FC<Props> = ({setNextPage}) => {
             name="lineaInvestigacion"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Línea de investigación</FormLabel>
+                <FormLabel>Descripción académica</FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Ingresa tus líneas de investigación"

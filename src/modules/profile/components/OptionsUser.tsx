@@ -9,8 +9,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useSession } from "@/context/AuthContext";
+import { useEffect, useState } from "react";
+import { AuthResponse } from "@/types/Usuario";
 
 export const OptionsUser = () => {
+
+  const sessionContext = useSession();
+
+  const [session, setSession] = useState<AuthResponse>();
+  
+  useEffect(()=>{
+    if(sessionContext?.currentUser) {
+      setSession(sessionContext.currentUser)
+    }
+  }, [])
 
   return (
     <div>
@@ -23,9 +36,11 @@ export const OptionsUser = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuLabel>Usuario 1</DropdownMenuLabel>
+          <DropdownMenuLabel>
+            {session?.usuario?.nombres}
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Cerrar sesión</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => {sessionContext.logout()}}>Cerrar sesión</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

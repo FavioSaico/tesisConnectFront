@@ -14,12 +14,13 @@ export interface Usuario {
     orcid?:               string;
     linea_investigacion: string;
     grado_academico:     GradoAcademico;
-    especialidades?:      Especialidad[];
-    publicaciones?:       Publicacion[];
+    especialidades:      Especialidad[];
+    publicaciones:       Publicacion[];
 }
 
 export interface Especialidad {
     idEspecialidad:   number;
+    nombreEspecialidad: string;
     aniosExperiencia: number;
 }
 

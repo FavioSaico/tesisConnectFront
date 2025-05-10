@@ -1,7 +1,23 @@
 import portadaDefault from "/portada.jpg";
 import perfilDefault from "/perfil.png";
+import { useContext, useEffect, useState } from "react";
+import { SessionContext } from "@/context/AuthContext";
+import { AuthResponse } from "@/types/Usuario";
 
 export const ProfilePage = () => {
+
+  const context = useContext(SessionContext);
+  const [session, setSession] = useState<AuthResponse>();
+
+  useEffect(()=>{
+    if(context?.currentUser) {
+      setSession(context.currentUser)
+    }
+  }, [])
+
+  if(!session) {
+    return (<>No autenticado</>)
+  }
 
   // Queda hacer una revisión de la sesión
   return (
@@ -13,7 +29,7 @@ export const ProfilePage = () => {
         </div>
         <article className="mt-10 ml-4">
           <div className="mb-2">
-            <p>Graciela Pérez Bezada</p>
+            <p>{session.usuario?.nombres} {session.usuario?.apellidos}</p>
             <p>Estudiante de pregrado</p>
           </div>
           <div className="flex gap-2">

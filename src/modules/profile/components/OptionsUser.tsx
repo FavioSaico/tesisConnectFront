@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { UserRound } from "lucide-react"
+import perfilDefault from "/perfil.png";
 
 import {
   DropdownMenu,
@@ -13,12 +13,14 @@ import {
 export const OptionsUser = () => {
 
   return (
-    <div className="">
+    <div>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <Button variant="outline" className="rounded-full focus-visible:ring-0">
-            <UserRound />
-          </Button> 
+          <Button variant="outline" className="rounded-full p-1 w-[40px] h-[40px]">
+            <div className="rounded-full">
+              <img src={perfilDefault} alt="" className="w-full h-full"/>
+            </div>
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel>Usuario 1</DropdownMenuLabel>

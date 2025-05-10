@@ -8,7 +8,7 @@ export const ProfileRoutes = () => {
       <Routes>
         {/* <Route path="/" element={ <Navigate to="/" />}  /> */}
 
-        <Route path="/*" element={ <ProfilePage/> } />
+        <Route path="/" element={ <ProfilePage/> } />
 
       </Routes>
     </ProfileLayout>

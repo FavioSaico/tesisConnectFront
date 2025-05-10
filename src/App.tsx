@@ -1,9 +1,12 @@
+import { SessionProvider } from './context/AuthContext'
 import { AppRouter } from './general/AppRoutes'
 
 function App() {
 
   return (
-    <AppRouter/>
+    <SessionProvider>
+      <AppRouter/>
+    </SessionProvider>
   )
 }
 

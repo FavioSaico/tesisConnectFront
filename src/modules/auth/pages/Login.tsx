@@ -70,9 +70,9 @@ export const LoginPage = () => {
             icon: <CircleX className="text-destructive"/>,
           })
         }else{
-          const usuario = res as AuthResponse;
+          const session = res as AuthResponse;
 
-          context?.setCurrentUserLS(usuario);
+          context?.setCurrentUserLS(session);
 
           toast.success("Autenticación completada", {
             closeButton: true,
@@ -81,7 +81,7 @@ export const LoginPage = () => {
 
           setTimeout(() => {
             navigate({
-              pathname:'/profile'
+              pathname:`/profile/${session.usuario?.id}`
             });
           }, 1000);
         }

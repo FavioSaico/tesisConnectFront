@@ -1,4 +1,5 @@
 // import { useEffect, useState } from "react";
+import { Outlet } from "react-router";
 import { OptionsUser } from "../components/OptionsUser";
 import { Searcher } from "../components/Searcher";
 import logo from "/logo_ico.png";
@@ -7,27 +8,7 @@ interface Props {
   children?: React.ReactNode;
 }
 
-export const ProfileLayout: React.FC<Props> = ({children}) => {
-
-  // const [isMobile, setIsMobile] = useState(false);
-
-  // useEffect(() => {
-  //   const checkIsMobile = () => {
-  //     const userAgent = window.navigator.userAgent.toLowerCase();
-  //     setIsMobile(/mobile|android|iphone|ipad|blackberry|iemobile/.test(userAgent));
-  //   };
-
-  //   function isMobilePx() {
-  //     const isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
-  //     setIsMobile(isSmallScreen)
-  //   }
-
-  //   isMobilePx()
-
-  //   checkIsMobile();
-  // }, []);
-  
-  // console.log(isMobile)
+export const ProfileLayout: React.FC<Props> = () => {
 
   return (
     <div className="w-full min-h-screen p-5">
@@ -38,8 +19,7 @@ export const ProfileLayout: React.FC<Props> = ({children}) => {
         <Searcher/>
         <OptionsUser/>
       </header>
-
-      {children}
+      <Outlet />
     </div>
   )
 }

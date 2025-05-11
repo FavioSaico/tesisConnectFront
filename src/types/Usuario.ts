@@ -14,6 +14,7 @@ export interface Usuario {
     orcid?:               string;
     linea_investigacion: string;
     grado_academico:     GradoAcademico;
+    carrera_profesional: CarreraProfesional;
     especialidades:      Especialidad[];
     publicaciones:       Publicacion[];
 }
@@ -25,6 +26,11 @@ export interface Especialidad {
 }
 
 export interface GradoAcademico {
+    id:     number;
+    nombre: string;
+}
+
+export interface CarreraProfesional {
     id:     number;
     nombre: string;
 }

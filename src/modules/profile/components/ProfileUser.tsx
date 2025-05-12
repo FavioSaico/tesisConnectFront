@@ -46,6 +46,9 @@ export const ProfileUser = () => {
   }
 
   useEffect(()=>{
+
+    setUsuario(undefined);
+
     if (!id) return
     // const session = context?.currentUser;
     if(currentUser && id === currentUser.id) {
@@ -57,7 +60,11 @@ export const ProfileUser = () => {
   }, [id])
 
   if(!usuario) {
-    return (<><Loader2 className="animate-spin text-primary mx-auto" size={40}/></>)
+    return (
+      <div className="userSection md:col-span-2 flex flex-col gap-3">
+        <Loader2 className="animate-spin text-primary mx-auto" size={40}/>
+      </div>
+    )
   }
 
   // Queda hacer una revisión de la sesión

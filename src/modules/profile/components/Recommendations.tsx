@@ -29,7 +29,7 @@ export const Recomendations = () => {
   async function obtenerRecomendacionesWithId() {
 
     const usuario = JSON.parse(localStorage.getItem('user') ?? '') as AuthResponse ;
-    console.log(usuario)
+    // console.log(usuario)
     const id = usuario.usuario?.id
 
     if(!id) {
@@ -54,7 +54,13 @@ export const Recomendations = () => {
         })
       }else{
         const recomendacionesData = res as RecomendationsResponse;
-        setRecomendaciones(recomendacionesData.recomendaciones);
+
+        const uniqueItems = Array.from(
+          new Map(recomendacionesData.recomendaciones.map(item => [item.idUsuarioRecomendado, item])).values()
+        );
+        const uniqueItems2 = uniqueItems.filter(u => u.idUsuarioRecomendado !== u.idInvestigador);
+
+        setRecomendaciones(uniqueItems2.slice(0,6));
       }
     })
     .catch(() => {
@@ -72,6 +78,11 @@ export const Recomendations = () => {
   async function obtenerDataUsuarioRecomendacionesWithId() {
 
     if(!recomendaciones) return;
+
+    if(recomendaciones.length === 0) {
+      isLoading(false)
+      return;
+    }
 
     const users: Usuario[] = [];
 
@@ -156,7 +167,7 @@ export const Recomendations = () => {
                       <div className="relative w-[55px]">
                         <img src={perfilDefault} alt="" className="w-[55px]"/>
                       </div>
-                      <div className="flex flex-col gap-2 h-full">
+                      <div className="flex flex-col gap-2 h-full max-w-[264px]">
                         <p className="font-medium">{`${usuario.nombres} ${usuario.apellidos}`}</p>
                         {/* <p className="text-xs">Asesor</p> */}
                         <p className="text-xs">{usuario.linea_investigacion}</p>

@@ -144,7 +144,7 @@ export const LoginPage = () => {
                   <Loader2 className="animate-spin" />
                   Cargando
                 </Button>)
-                : (<Button variant="default" size="btnAuth" type="submit">Ingresar</Button>)
+                : (<><Button variant="default" size="btnAuth" type="submit">Ingresar</Button></>)
               }
             </div>
             

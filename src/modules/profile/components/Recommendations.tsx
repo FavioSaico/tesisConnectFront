@@ -12,7 +12,7 @@ import { Recomendaciones, RecomendationsResponse } from "@/types/Recomendaciones
 import './profile.css';
 
 const URL_BASE = import.meta.env.VITE_URL_BASE;
-const URL_BASE_R = 'http://localhost:8000';
+// const URL_BASE_R = 'http://localhost:8000';
 const PATH_RECOMENDACIONES = '/recomendaciones';
 const PATH_USUARIO = '/api/auth/informacion';
 

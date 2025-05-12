@@ -1,5 +1,8 @@
 import { useSession } from "@/context/AuthContext"
-import { AuthRoutes } from "@/modules/auth/routes/AuthRoutes"
+import { AuthLayout } from "@/modules/auth/layout/AuthLayout"
+import { LoginPage } from "@/modules/auth/pages/Login"
+import { RegisterPage } from "@/modules/auth/pages/Register"
+// import { AuthRoutes } from "@/modules/auth/routes/AuthRoutes"
 import { ProfileLayout } from "@/modules/profile/layout/ProfileLayout"
 import { ProfilePage } from "@/modules/profile/pages/Profile"
 import { Navigate, Route, Routes } from "react-router"
@@ -9,9 +12,9 @@ export const AppRouter = () => {
 
   const sessionContext = useSession()
 
-  if(sessionContext.isLoading) {
-    return <>Cargando</>
-  }
+  // if(sessionContext.isLoading) {
+  //   return <>Cargando</>
+  // }
   const session = sessionContext.currentUser;
   
   return (
@@ -23,8 +26,15 @@ export const AppRouter = () => {
           session === null
           ? (
             <>
-              <Route path="/auth/*" element={ <AuthRoutes /> } />
-              <Route path='/*' element={ <Navigate to='/auth/*' />  } />
+              <Route path="auth">
+                <Route element={<AuthLayout/>}>
+                  {/* <Route index element={<ProfilePage/>}/> */}
+                  <Route path='login' element={<LoginPage/>}/>
+                  <Route path='register' element={<RegisterPage/>}/>
+                </Route>
+              </Route>
+              {/* <Route path="/auth/*" element={ <AuthRoutes /> } /> */}
+              <Route path='/*' element={ <Navigate to='/auth/login' />  } />
             </>
           )
           : (

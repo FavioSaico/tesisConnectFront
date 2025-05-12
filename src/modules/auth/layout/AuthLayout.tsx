@@ -1,11 +1,12 @@
 
+import { Outlet } from "react-router";
 import logo from "/logo.png";
 
 interface Props {
   children?: React.ReactNode;
 }
 
-export const AuthLayout: React.FC<Props> = ({children}) => {
+export const AuthLayout: React.FC<Props> = () => {
 
   // Queda hacer una revisión de la sesión
   return (
@@ -16,7 +17,7 @@ export const AuthLayout: React.FC<Props> = ({children}) => {
         </div>
       </header>
 
-      {children}
+      <Outlet />
     </div>
   )
 }

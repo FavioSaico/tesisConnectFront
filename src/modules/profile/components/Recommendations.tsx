@@ -13,7 +13,7 @@ import './profile.css';
 
 const URL_BASE = import.meta.env.VITE_URL_BASE;
 // const URL_BASE_R = 'http://localhost:8000';
-const PATH_RECOMENDACIONES = '/recomendaciones';
+const PATH_RECOMENDACIONES = '/recomendaciones/por-id-y-fecha?id_investigador=';
 const PATH_USUARIO = '/api/auth/informacion';
 
 export const Recomendations = () => {
@@ -34,7 +34,7 @@ export const Recomendations = () => {
 
   async function obtenerRecomendacionesWithId() {
     isLoading(true);
-    await fetch(`${URL_BASE}${PATH_RECOMENDACIONES}/${id}`,{
+    await fetch(`${URL_BASE}${PATH_RECOMENDACIONES}${id}`,{
       method: 'GET',
         headers:{
           'Content-Type': 'application/json'

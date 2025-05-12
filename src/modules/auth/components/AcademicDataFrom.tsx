@@ -30,10 +30,6 @@ const items = [
   {
     id: "home",
     label: "Asesor",
-  },
-  {
-    id: "applications",
-    label: "Colaborador",
   }
 ] as const
 
@@ -113,13 +109,36 @@ export const AcademicDataFrom: React.FC<Props> = ({setNextPage}) => {
 
           <FormField
             control={form.control}
+            name="gradoAcademico"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Carrera profesional</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Selecciona tu carrera profesional" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="m@example.com">m@example.com</SelectItem>
+                    <SelectItem value="m@google.com">m@google.com</SelectItem>
+                    <SelectItem value="m@support.com">m@support.com</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="roles"
             render={() => (
               <FormItem>
                 <div className="">
                   <FormLabel className="text-base">Rol actual</FormLabel>
                 </div>
-                <div className="flex flex-row gap-2 justify-between p-3 border rounded-[5px]">
+                <div className="flex flex-row gap-8 p-3 border rounded-[5px]">
                   {items.map((item) => (
                     <FormField
                       key={item.id}

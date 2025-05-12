@@ -3,6 +3,7 @@ import { Outlet } from "react-router";
 import { OptionsUser } from "../components/OptionsUser";
 import { Searcher } from "../components/Searcher";
 import logo from "/logo_ico.png";
+// import { Recomendations } from "../components/Recommendations";
 
 interface Props {
   children?: React.ReactNode;
@@ -19,7 +20,10 @@ export const ProfileLayout: React.FC<Props> = () => {
         <Searcher/>
         <OptionsUser/>
       </header>
-      <Outlet />
+      {/* <div className="mt-3 mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-[1200px]"> */}
+        <Outlet />
+      {/* </div> */}
+      
     </div>
   )
 }

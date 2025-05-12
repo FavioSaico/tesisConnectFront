@@ -1,6 +1,6 @@
-import { useSession } from "@/context/AuthContext";
+// import { useSession } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
-import { Usuario } from "@/types/Usuario";
+import { AuthResponse, Usuario } from "@/types/Usuario";
 import { useNavigate } from "react-router";
 
 import perfilDefault from "/perfil.png";
@@ -18,21 +18,24 @@ const PATH_USUARIO = '/api/auth/informacion';
 
 export const Recomendations = () => {
 
-  const sessionContext = useSession();
+  // const sessionContext = useSession();
   const navigate = useNavigate();
-  const id = sessionContext.currentUser?.usuario?.id;
+  // const id = 1
 
   const [ recomendaciones, setRecomendaciones ] = useState<Recomendaciones[]>([])
   const [ usuarios, setUsuarios ] = useState<Usuario[]>([])
   const [ loading, isLoading ] = useState<boolean>(true)
-  // const navigate = useNavigate();
-
-  // const [session, setSession] = useState<AuthResponse>();
-  if(!id) {
-    return <>No hay recomendaciones</>
-  }
 
   async function obtenerRecomendacionesWithId() {
+
+    const usuario = JSON.parse(localStorage.getItem('user') ?? '') as AuthResponse ;
+    console.log(usuario)
+    const id = usuario.usuario?.id
+
+    if(!id) {
+      isLoading(false)
+      return
+    }
     isLoading(true);
     await fetch(`${URL_BASE}${PATH_RECOMENDACIONES}${id}`,{
       method: 'GET',
@@ -73,7 +76,7 @@ export const Recomendations = () => {
     const users: Usuario[] = [];
 
     const usuariosPeticion = recomendaciones.map( async (recomendacion) => {
-      return fetch(`${URL_BASE}${PATH_USUARIO}/${recomendacion.idUsuarioRecomendado}`,{
+      return fetch(`https://api-usuario-609569711189.us-central1.run.app${PATH_USUARIO}/${recomendacion.idUsuarioRecomendado}`,{
         method: 'GET',
           headers:{
             'Content-Type': 'application/json'
@@ -169,7 +172,7 @@ export const Recomendations = () => {
               </ul>
             </div>
             <div>
-              <p className="font-semibold">Personas con tus mismos intereses</p>
+              <p className="font-semibold mt-3">Personas con tus mismos intereses</p>
                 <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2 mt-2">
                   {
                     tesistas.map((usuario,i) => {

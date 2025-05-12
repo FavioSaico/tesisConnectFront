@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { CircleX, Pencil } from "lucide-react";
+import { CircleX, Loader2, Pencil } from "lucide-react";
 import { useParams } from "react-router";
 import { toast } from "sonner";
 import { SessionContext } from "@/context/AuthContext";
@@ -7,7 +7,7 @@ import { Usuario } from "@/types/Usuario";
 import portadaDefault from "/portada.jpg";
 import perfilDefault from "/perfil.png";
 
-const URL_BASE = import.meta.env.VITE_URL_BASE;
+const URL_BASE = 'https://api-usuario-609569711189.us-central1.run.app';
 const PATH = '/api/auth/informacion';
 
 export const ProfileUser = () => {
@@ -19,9 +19,9 @@ export const ProfileUser = () => {
   async function obtenerUsuarioWithId() {
     await fetch(`${URL_BASE}${PATH}/${id}`,{
       method: 'GET',
-        headers:{
-          'Content-Type': 'application/json'
-        },
+      headers:{
+        'Content-Type': 'application/json'
+      }
     })
     .then((res) => res.json())
     .then(res => {
@@ -57,7 +57,7 @@ export const ProfileUser = () => {
   }, [id])
 
   if(!usuario) {
-    return (<>Usuario no existe</>)
+    return (<><Loader2 className="animate-spin text-primary mx-auto" size={40}/></>)
   }
 
   // Queda hacer una revisión de la sesión

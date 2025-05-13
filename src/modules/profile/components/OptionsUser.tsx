@@ -50,7 +50,12 @@ export const OptionsUser = () => {
               pathname:`/profile/${usuario?.id}`
             });
           }}>Ver perfil</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => {sessionContext.logout()}}>Cerrar sesión</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => {
+            sessionContext.logout()
+            navigate({
+              pathname:`/auth/login`
+            });
+          }}>Cerrar sesión</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

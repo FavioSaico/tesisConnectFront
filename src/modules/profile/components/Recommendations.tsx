@@ -11,7 +11,7 @@ import { Recomendaciones, RecomendationsResponse } from "@/types/Recomendaciones
 
 import './profile.css';
 
-const URL_BASE = import.meta.env.VITE_URL_BASE;
+// const URL_BASE = import.meta.env.VITE_URL_BASE;
 // const URL_BASE_R = 'http://localhost:8000';
 const PATH_RECOMENDACIONES = '/recomendaciones/por-id-y-fecha?id_investigador=';
 const PATH_USUARIO = '/api/auth/informacion';
@@ -27,7 +27,7 @@ export const Recomendations = () => {
   const [ loading, isLoading ] = useState<boolean>(true)
 
   async function obtenerRecomendacionesWithId() {
-
+    isLoading(true);
     const usuario = JSON.parse(localStorage.getItem('user') ?? '') as AuthResponse ;
     // console.log(usuario)
     const id = usuario.usuario?.id
@@ -36,8 +36,8 @@ export const Recomendations = () => {
       isLoading(false)
       return
     }
-    isLoading(true);
-    await fetch(`${URL_BASE}${PATH_RECOMENDACIONES}${id}`,{
+    
+    await fetch(`https://api-recomendacion-609569711189.us-central1.run.app${PATH_RECOMENDACIONES}${id}`,{
       method: 'GET',
         headers:{
           'Content-Type': 'application/json'
@@ -60,6 +60,11 @@ export const Recomendations = () => {
         );
         const uniqueItems2 = uniqueItems.filter(u => u.idUsuarioRecomendado !== u.idInvestigador);
 
+        if(uniqueItems2.length === 0) {
+          isLoading(false)
+          return;
+        }
+
         setRecomendaciones(uniqueItems2.slice(0,6));
       }
     })
@@ -79,10 +84,10 @@ export const Recomendations = () => {
 
     if(!recomendaciones) return;
 
-    if(recomendaciones.length === 0) {
-      isLoading(false)
-      return;
-    }
+    // if(recomendaciones.length === 0) {
+    //   isLoading(false)
+    //   return;
+    // }
 
     const users: Usuario[] = [];
 

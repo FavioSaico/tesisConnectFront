@@ -1,6 +1,6 @@
 export interface AuthResponse {
-    token?:   string;
-    usuario?: Usuario;
+    token:   string;
+    usuario: Usuario;
 }
 
 export interface Usuario {
@@ -8,10 +8,10 @@ export interface Usuario {
     nombres:             string;
     apellidos:           string;
     correo:              string;
-    descripcion?:         string;
+    descripcion:         string;
     rol_tesista:         boolean;
     rol_asesor:          boolean;
-    orcid?:               string;
+    orcid:               string;
     linea_investigacion: string;
     grado_academico:     GradoAcademico;
     carrera_profesional: CarreraProfesional;

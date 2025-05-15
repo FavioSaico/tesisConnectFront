@@ -9,14 +9,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useSession } from "@/context/AuthContext";
+// import { useSession } from "@/context/AuthContext";
 // import { useEffect, useState } from "react";
 import { AuthResponse } from "@/types/Usuario";
 import { useNavigate } from "react-router";
 
 export const OptionsUser = () => {
 
-  const sessionContext = useSession();
+  // const sessionContext = useSession();
   const navigate = useNavigate();
 
   // const [session, setSession] = useState<AuthResponse>();
@@ -51,10 +51,13 @@ export const OptionsUser = () => {
             });
           }}>Ver perfil</DropdownMenuItem>
           <DropdownMenuItem onSelect={() => {
-            sessionContext.logout()
-            navigate({
-              pathname:`/auth/login`
-            });
+            // sessionContext.logout()
+            localStorage.removeItem("user")
+            setTimeout(() => {
+              navigate({
+                pathname:`/auth/login`
+              });
+            }, 1000)
           }}>Cerrar sesión</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

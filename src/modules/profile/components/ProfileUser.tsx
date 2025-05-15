@@ -7,7 +7,7 @@ import { Usuario } from "@/types/Usuario";
 import portadaDefault from "/portada.jpg";
 import perfilDefault from "/perfil.png";
 
-const URL_BASE = import.meta.env.VITE_URL_BASE;
+const URL_BASE = 'https://api-usuario-609569711189.us-central1.run.app';
 const PATH = '/api/auth/informacion';
 
 export const ProfileUser = () => {

@@ -12,8 +12,8 @@ import { Recomendaciones, RecomendationsResponse } from "@/types/Recomendaciones
 import './profile.css';
 import { Progress } from "@/components/ui/progress";
 
-const URL_BASE = import.meta.env.VITE_URL_BASE;
-const URL_BASE_R = 'http://localhost:8000';
+const URL_BASE = 'https://api-usuario-609569711189.us-central1.run.app';
+const URL_BASE_R = 'https://api-recomendacion-609569711189.us-central1.run.app';
 const PATH_RECOMENDACIONES = '/recomendaciones/por-id-y-fecha?id_investigador=';
 const PATH_USUARIO = '/api/auth/informacion';
 

@@ -6,8 +6,9 @@ import { SessionContext } from "@/context/AuthContext";
 import { Usuario } from "@/types/Usuario";
 import portadaDefault from "/portada.jpg";
 import perfilDefault from "/perfil.png";
+import { ModalSolicitarAsesoria } from "./ModalSolicitarAsesoria";
 
-const URL_BASE = 'https://api-usuario-609569711189.us-central1.run.app';
+const URL_BASE = "http://localhost:3000"; // 'https://api-usuario-609569711189.us-central1.run.app';
 const PATH = '/api/auth/informacion';
 
 export const ProfileUser = () => {
@@ -96,6 +97,12 @@ export const ProfileUser = () => {
                     )
                   }
                 </div>
+                <article className="ml-auto">
+                  {
+                    id !== currentUser?.id && usuario.rol_asesor 
+                    ? <ModalSolicitarAsesoria destinatarioId={id ?? ''} remitenteId={currentUser?.id ?? ''} /> : <></>
+                  }
+                </article>
                 {
                   id === currentUser?.id ? <Pencil className="ml-auto cursor-pointer"/> : <></>
                 }

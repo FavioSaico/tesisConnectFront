@@ -8,7 +8,7 @@ import portadaDefault from "/portada.jpg";
 import perfilDefault from "/perfil.png";
 import { ModalSolicitarAsesoria } from "./ModalSolicitarAsesoria";
 
-const URL_BASE = "http://localhost:3000"; // 'https://api-usuario-609569711189.us-central1.run.app';
+const URL_BASE ='https://api-usuario-609569711189.us-central1.run.app'; // "http://localhost:3000"
 const PATH = '/api/auth/informacion';
 
 export const ProfileUser = () => {

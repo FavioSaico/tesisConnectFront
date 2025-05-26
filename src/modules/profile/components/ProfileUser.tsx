@@ -1,24 +1,35 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CircleX, Loader2, Pencil } from "lucide-react";
 import { useParams } from "react-router";
 import { toast } from "sonner";
-import { SessionContext } from "@/context/AuthContext";
+import { useSession } from "@/context/AuthContext";
 import { Usuario } from "@/types/Usuario";
 import portadaDefault from "/portada.jpg";
 import perfilDefault from "/perfil.png";
 import { ModalSolicitarAsesoria } from "./ModalSolicitarAsesoria";
+import { GET_USER } from "../graphql/getUserProfile";
+import { useLazyQuery } from "@apollo/client";
 
-const URL_BASE ='https://api-usuario-609569711189.us-central1.run.app'; // "http://localhost:3000"
+const URL_USUARIO = import.meta.env.VITE_URL_USUARIO;
+const API_MODE = import.meta.env.VITE_API_MODE;
 const PATH = '/api/auth/informacion';
 
-export const ProfileUser = () => {
-  const { id } = useParams()
-  const context = useContext(SessionContext);
-  const currentUser = context?.currentUser?.usuario;
-  const [usuario, setUsuario] = useState<Usuario>();
+interface UserData {
+  getUser: Usuario
+}
 
-  async function obtenerUsuarioWithId() {
-    await fetch(`${URL_BASE}${PATH}/${id}`,{
+export const ProfileUser = () => {
+  const { id } = useParams();
+  const { user } = useSession()
+  const currentUser = user?.usuario;
+  const [usuario, setUsuario] = useState<Usuario>();
+  const [ isloadingRest, setIsLoadingRest ] = useState<boolean>(false)
+
+  const [ getUser, { loading: isLoadingGql, error }] = useLazyQuery<UserData, { getUserId: number }>(GET_USER);
+
+  async function obtenerUsuarioWithIdRest() {
+    setIsLoadingRest(true)
+    await fetch(`${URL_USUARIO}${PATH}/${id}`,{
       method: 'GET',
       headers:{
         'Content-Type': 'application/json'
@@ -32,9 +43,11 @@ export const ProfileUser = () => {
           closeButton: true,
           icon: <CircleX className="text-destructive"/>,
         })
+        setIsLoadingRest(false)
       }else{
         const usuarioData = res as Usuario;
         setUsuario(usuarioData);
+        setIsLoadingRest(false)
       }
     })
     .catch(() => {
@@ -43,7 +56,21 @@ export const ProfileUser = () => {
         closeButton: true,
         icon: <CircleX className="text-destructive"/>,
       })
+      setIsLoadingRest(false)
     })
+  }
+
+  async function obtenerUsuarioWithIdGql() {
+    if (!id) return
+
+    if(isNaN(Number(id))) return
+
+    const { data } = await getUser({
+      variables: { getUserId: Number(id) }
+    });
+
+    if( !data ) return;
+    setUsuario(data.getUser)
   }
 
   useEffect(()=>{
@@ -51,21 +78,43 @@ export const ProfileUser = () => {
     setUsuario(undefined);
 
     if (!id) return
-    // const session = context?.currentUser;
+    if(isNaN(Number(id))) return
+
     if(currentUser && id === currentUser.id) {
       setUsuario(currentUser)
     }else{
-      obtenerUsuarioWithId()
+      if(API_MODE === 'rest') {
+        obtenerUsuarioWithIdRest()
+      }else{
+        obtenerUsuarioWithIdGql()
+      }
+
     }
 
   }, [id])
 
-  if(!usuario) {
+  if(isloadingRest || isLoadingGql) {
     return (
       <div className="userSection md:col-span-2 flex flex-col gap-3">
         <Loader2 className="animate-spin text-primary mx-auto" size={40}/>
       </div>
     )
+  }
+
+  if(!usuario) {
+    return (
+      <div className="userSection md:col-span-2 flex flex-col gap-3">
+        <p>Usuario no econtrado</p>
+      </div>
+    )
+  }
+
+  if(API_MODE === 'gql' && error) {
+    toast.error("Error", {
+      description: error.message,
+      closeButton: true,
+      icon: <CircleX className="text-destructive"/>,
+    })
   }
 
   // Queda hacer una revisión de la sesión

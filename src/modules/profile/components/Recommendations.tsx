@@ -1,48 +1,72 @@
-// import { useSession } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
-import { AuthResponse, Usuario } from "@/types/Usuario";
+// import { Usuario } from "@/types/Usuario";
 import { useNavigate } from "react-router";
 
 import perfilDefault from "/perfil.png";
 import { CircleX, UserRoundPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Recomendaciones, RecomendationsResponse } from "@/types/Recomendaciones";
+import { Recomendaciones, RecomendacionesUser, RecomendationsResponse } from "@/types/Recomendaciones";
 
 import './profile.css';
 import { Progress } from "@/components/ui/progress";
+import { useSession } from "@/context/AuthContext";
+import { GET_RECOMMENDED_USERS } from "../graphql/getUserRecomendations";
+import { useLazyQuery } from "@apollo/client";
 
-const URL_BASE = 'https://api-usuario-609569711189.us-central1.run.app'; // "http://localhost:3000"
-const URL_BASE_R = 'https://api-recomendacion-609569711189.us-central1.run.app'; // "http://localhost:8000"
-
+const URL_USUARIO = import.meta.env.VITE_URL_USUARIO
+const URL_RECOMENDACIONES = import.meta.env.VITE_URL_RECOMENDACIONES
+const API_MODE = import.meta.env.VITE_API_MODE;
 const PATH_RECOMENDACIONES = '/recomendaciones/por-id-y-fecha?id_investigador=';
 const PATH_USUARIO = '/api/auth/informacion';
 
+export type UsuarioRecomendado = RecomendacionesUser;
 
-export type UsuarioRecomendado = Usuario & { puntaje: number }
+interface UserData {
+  getUsers: {
+    id: string
+    nombres: string
+    apellidos: string
+    linea_investigacion: string
+    rol_asesor: boolean
+  }[]
+}
+
+interface UserDataRest {
+  id: string
+  nombres: string
+  apellidos: string
+  linea_investigacion: string
+  rol_asesor: boolean
+}
+
+interface UserVars {
+  ids: number[];
+}
 
 export const Recomendations = () => {
 
-  // const sessionContext = useSession();
   const navigate = useNavigate();
-  // const id = 1
 
   const [ recomendaciones, setRecomendaciones ] = useState<Recomendaciones[]>([])
   const [ usuarios, setUsuarios ] = useState<UsuarioRecomendado[]>([])
-  const [ loading, isLoading ] = useState<boolean>(true)
+  const [ loadingRest, setLoading ] = useState<boolean>(true)
+
+  const [ getUsers, { loading: isLoadingGql, error }] = useLazyQuery<UserData, UserVars>(GET_RECOMMENDED_USERS);
+
+  const { user } = useSession()
 
   async function obtenerRecomendacionesWithId() {
-    isLoading(true);
-    const usuario = JSON.parse(localStorage.getItem('user') ?? '') as AuthResponse ;
-    // console.log(usuario)
-    const id = usuario.usuario?.id
+    setLoading(true);
+    const usuario = user?.usuario;
+    const id = usuario?.id
 
     if(!id) {
-      isLoading(false)
+      setLoading(false)
       return
     }
     
-    await fetch(`${URL_BASE_R}${PATH_RECOMENDACIONES}${id}`,{
+    await fetch(`${URL_RECOMENDACIONES}${PATH_RECOMENDACIONES}${id}`,{
       method: 'GET',
         headers:{
           'Content-Type': 'application/json'
@@ -50,13 +74,13 @@ export const Recomendations = () => {
     })
     .then((res) => res.json())
     .then(res => {
-      console.log(res)
       if(res.message) {
         toast.error("Error", {
           description: res.error ?? res.message,
           closeButton: true,
           icon: <CircleX className="text-destructive"/>,
         })
+        setLoading(false)
       }else{
         const recomendacionesData = res as RecomendationsResponse;
 
@@ -66,7 +90,7 @@ export const Recomendations = () => {
         const uniqueItems2 = uniqueItems.filter(u => u.idUsuarioRecomendado !== u.idInvestigador);
 
         if(uniqueItems2.length === 0) {
-          isLoading(false)
+          setLoading(false)
           return;
         }
 
@@ -79,65 +103,96 @@ export const Recomendations = () => {
         closeButton: true,
         icon: <CircleX className="text-destructive"/>,
       })
-      // setRecomendaciones([]);
-      isLoading(false)
+      setLoading(false)
     })
     
+  }
+
+  async function getUsersGpl() {
+
+    const { data } = await getUsers({
+      variables: { ids: recomendaciones.map(re => re.idUsuarioRecomendado) }
+    });
+
+    if( !data ) return;
+
+    const usersData =  data.getUsers.map( user => {
+      let currentPuntaje = 0;
+      recomendaciones.find(re => {
+        if(user.id === re.idUsuarioRecomendado.toString()) {
+          currentPuntaje = re.puntaje;
+          return true
+        }
+        return false
+      });
+
+      return { ...user,  puntaje: Number((currentPuntaje*100).toFixed(2))}
+    })
+
+    setUsuarios(usersData)
+  }
+
+  async function getUsersRest() {
+
+    const usuariosRest = await fetch(`${URL_USUARIO}${PATH_USUARIO}`,{
+      method: 'POST',
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ids: recomendaciones.map(re => re.idUsuarioRecomendado)
+        })
+    })
+    .then((res) => res.json())
+    .then(res => {
+      if(res.message) {
+        toast.error("Error", {
+          description: res.error ?? res.message,
+          closeButton: true,
+          icon: <CircleX className="text-destructive"/>,
+        })
+      }else{
+        const usersData =  res.map( (user: UserDataRest) => {
+          let currentPuntaje = 0;
+          recomendaciones.find(re => {
+            if(user.id === re.idUsuarioRecomendado.toString()) {
+              currentPuntaje = re.puntaje;
+              return true
+            }
+            return false
+          });
+
+          return { ...user,  puntaje: Number((currentPuntaje*100).toFixed(2))}
+        }) as UsuarioRecomendado[]
+
+        setLoading(false)
+        return usersData;
+      }
+      
+    })
+    .catch(() => {
+      toast.error("Error", {
+        description: "Error al obtener usuarios recomendados",
+        closeButton: true,
+        icon: <CircleX className="text-destructive"/>,
+      })
+      setLoading(false)
+    });
+
+    setUsuarios(usuariosRest ?? []);
   }
 
   async function obtenerDataUsuarioRecomendacionesWithId() {
 
     if(!recomendaciones) return;
 
-    // if(recomendaciones.length === 0) {
-    //   isLoading(false)
-    //   return;
-    // }
+    if(!recomendaciones.length) return;
 
-    const users: UsuarioRecomendado[] = [];
-
-    const usuariosPeticion = recomendaciones.map( async (recomendacion) => {
-      return fetch(`${URL_BASE}${PATH_USUARIO}/${recomendacion.idUsuarioRecomendado}`,{
-        method: 'GET',
-          headers:{
-            'Content-Type': 'application/json'
-          },
-      })
-      .then((res) => res.json())
-      .then(res => {
-        if(res.message) {
-          toast.error("Error", {
-            description: res.error ?? res.message,
-            closeButton: true,
-            icon: <CircleX className="text-destructive"/>,
-          })
-        }else{
-          const usuarioData = {...res, puntaje: Number((recomendacion.puntaje*100).toFixed(2))} as UsuarioRecomendado;
-          isLoading(false)
-          return usuarioData;
-          // users.push(usuarioData)
-        }
-        
-      })
-      .catch(() => {
-        toast.error("Error", {
-          description: "Error al obtener usuarios recomendados",
-          closeButton: true,
-          icon: <CircleX className="text-destructive"/>,
-        })
-        // throw new Error('Error en la petición');
-        // setUsuarios([]);
-        isLoading(false)
-      })
-    })
-
-    const datos = await Promise.all(usuariosPeticion);
-
-    datos.forEach((dato) => {
-      if(dato) users.push(dato)
-    })
-
-    setUsuarios(users);
+    if(API_MODE === 'rest') {
+      getUsersRest()
+    }else {
+      getUsersGpl()
+    }
   }
 
   function handleClickUser(id: string) {
@@ -154,6 +209,14 @@ export const Recomendations = () => {
     obtenerDataUsuarioRecomendacionesWithId()
   }, [recomendaciones])
 
+  if(API_MODE === 'gql'  && error) {
+    toast.error("Error", {
+      description: error.message,
+      closeButton: true,
+      icon: <CircleX className="text-destructive"/>,
+    })
+  }
+
   const tesistas = usuarios.filter(u => !u.rol_asesor)
   const asesores = usuarios.filter(u => u.rol_asesor)
 
@@ -163,7 +226,7 @@ export const Recomendations = () => {
         <h2 className="font-bold text-xl">Recomendaciones</h2>
       </div>
       {
-        (loading) 
+        (API_MODE === 'rest' ? loadingRest : isLoadingGql)
         ? (<div className="loader"></div>)
         : (
           <>

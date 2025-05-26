@@ -2,49 +2,41 @@ import { AuthResponse } from '@/types/Usuario'
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 
 type SessionContextType = {
-  currentUser?: AuthResponse | null
-  setCurrentUserLS: (user: AuthResponse) => void
-  isLoading: boolean
-  // setIsLoading: (isLoading: boolean) => void
+  user: AuthResponse | null
+  setUserLS: (user: AuthResponse) => void
   logout: () => void
+  isLoading: boolean
 }
-// Este es el contexto que tenemos que consumir
-// esto lo usamos con el useContext
+
 export const SessionContext = createContext<SessionContextType| undefined>(undefined)
 
-// Este es el que nos provee de acceso al contexto
-// el provider retorna un componente que envuelve a su children
 export function SessionProvider ({ children } : { children: ReactNode }) {
 
-  const [currentUser, setCurrentUser] = useState<AuthResponse| null>(null)
+  const [user, setUser] = useState<AuthResponse| null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     const stored = localStorage.getItem("user")
     if (stored) {
-      setCurrentUser(JSON.parse(stored))
-      setIsLoading(false)
+      setUser(JSON.parse(stored))
     }
+    setIsLoading(false)
   }, [])
 
-  const setCurrentUserLS = (user: AuthResponse) => {
-    setIsLoading(true)
-    setCurrentUser(user)
+  const setUserLS = (user: AuthResponse) => {
+    setUser(user)
     localStorage.setItem("user", JSON.stringify(user))
-    setIsLoading(false)
   }
 
   const logout = () => {
-    setIsLoading(true)
     localStorage.removeItem("user")
-    setCurrentUser(null)
-    setIsLoading(false)
+    setUser(null)
   }
 
 
   return (
     <SessionContext.Provider value={{
-      currentUser, setCurrentUserLS, logout, isLoading
+      user, setUserLS, logout, isLoading
     }}>
       {children}
     </SessionContext.Provider>

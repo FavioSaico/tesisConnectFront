@@ -9,26 +9,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-// import { useSession } from "@/context/AuthContext";
-// import { useEffect, useState } from "react";
-import { AuthResponse } from "@/types/Usuario";
 import { useNavigate } from "react-router";
+import { useSession } from "@/context/AuthContext";
 
 export const OptionsUser = () => {
 
-  // const sessionContext = useSession();
+  const { logout, user, isLoading } = useSession();
   const navigate = useNavigate();
 
-  // const [session, setSession] = useState<AuthResponse>();
-  
-  // useEffect(()=>{
-  //   if(sessionContext?.currentUser) {
-  //     setSession(sessionContext.currentUser)
-  //   }
-  // }, [])
+  if(isLoading) {
+    return (<>Cargando ...</>)
+  }
 
-  const sessionLS = JSON.parse(localStorage.getItem('user') ?? '') as AuthResponse;
-  const usuario = sessionLS.usuario;
+  if(!user){
+    return (<>Usuario no existe</>)
+  }
+
+  const usuario = user.usuario ;
 
   return (
     <div>
@@ -51,13 +48,12 @@ export const OptionsUser = () => {
             });
           }}>Ver perfil</DropdownMenuItem>
           <DropdownMenuItem onSelect={() => {
-            // sessionContext.logout()
-            localStorage.removeItem("user")
+            logout()
             setTimeout(() => {
               navigate({
                 pathname:`/auth/login`
               });
-            }, 1000)
+            }, 500)
           }}>Cerrar sesión</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

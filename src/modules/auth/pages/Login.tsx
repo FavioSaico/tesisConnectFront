@@ -16,11 +16,14 @@ import {
 
 import "./auth.css";
 import { useNavigate } from "react-router"
-import { useContext, useState } from "react"
+import { useState } from "react"
 import { Check, CircleX, Loader2 } from "lucide-react"
 
 import { AuthResponse } from '@/types/Usuario'
-import { SessionContext } from "@/context/AuthContext"
+import { useSession } from "@/context/AuthContext"
+import { useMutation } from "@apollo/client"
+
+import { LOGIN_USER } from "../graphql/loginUser.ts"
 
 const formSchema = z.object({
   correo: z.string().email({
@@ -31,12 +34,13 @@ const formSchema = z.object({
   }),
 })
 
-const URL_BASE = import.meta.env.VITE_URL_BASE;
+const URL_USUARIO = import.meta.env.VITE_URL_USUARIO;
+const API_MODE = import.meta.env.VITE_API_MODE;
 const PATH = '/api/auth/login';
 
 export const LoginPage = () => {
   
-  const [isLoding, setIsLoading] = useState<boolean>(false)
+  const [isLodingRest, setIsLoading] = useState<boolean>(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,32 +51,28 @@ export const LoginPage = () => {
   })
 
   const navigate = useNavigate();
-  const context = useContext(SessionContext)
+
+  const { setUserLS } = useSession()
+
+  const [login, { loading: loadingGql, error }] = useMutation(LOGIN_USER);
   
   async function onSubmit(values: z.infer<typeof formSchema>) {
-
-    setIsLoading(true);
+    
     try {
-      await fetch(`${URL_BASE}${PATH}`, {
-        method: 'POST',
-        headers:{
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({...values})
-      })
-      .then(res => res.json())
-      .then(res => {
 
-        if(res.message) {
-          toast.error("Error", {
-            description: res.error ?? res.message,
-            closeButton: true,
-            icon: <CircleX className="text-destructive"/>,
-          })
-        }else{
-          const session = res as AuthResponse;
+      if(API_MODE === 'rest') {
+        loginRest(values)
+      }else{
+        const { data } = await login({ variables: {
+          loginDto: {
+            ...values
+          }
+        }});
 
-          context?.setCurrentUserLS(session);
+        if (data?.login) {
+          const session = data?.login as AuthResponse;
+
+          setUserLS(session);
 
           toast.success("Autenticación completada", {
             closeButton: true,
@@ -85,21 +85,65 @@ export const LoginPage = () => {
             });
           }, 1000);
         }
-        setIsLoading(false)
-      })
-      .catch(() => {
-        toast.error("Error", {
-          description: 'Error en la autenticación',
-          closeButton: true,
-          icon: <CircleX className="text-destructive"/>,
-        })
-      })
-      .finally(() => setIsLoading(false))
+      }
       ;
     } catch (error) {
       console.log(error)
     }
-    
+  }
+
+  async function loginRest(values: any) {
+    setIsLoading(true);
+    await fetch(`${URL_USUARIO}${PATH}`, {
+      method: 'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({...values})
+    })
+    .then(res => res.json())
+    .then(res => {
+
+      if(res.message) {
+        toast.error("Error", {
+          description: res.error ?? res.message,
+          closeButton: true,
+          icon: <CircleX className="text-destructive"/>,
+        })
+      }else{
+        const session = res as AuthResponse;
+
+        setUserLS(session);
+
+        toast.success("Autenticación completada", {
+          closeButton: true,
+          icon: <Check className="text-green-700" />,
+        })
+
+        setTimeout(() => {
+          navigate({
+            pathname:`/profile/${session.usuario?.id}`
+          });
+        }, 1000);
+      }
+      setIsLoading(false)
+    })
+    .catch(() => {
+      toast.error("Error", {
+        description: 'Error en la autenticación',
+        closeButton: true,
+        icon: <CircleX className="text-destructive"/>,
+      })
+    })
+    .finally(() => setIsLoading(false))
+  }
+
+  if(API_MODE === 'gql' && error) {
+    toast.error("Error", {
+      description: error.message,
+      closeButton: true,
+      icon: <CircleX className="text-destructive"/>,
+    })
   }
 
   // Queda hacer una revisión de la sesión
@@ -139,7 +183,7 @@ export const LoginPage = () => {
             <a className="text-primary underline-offset-4 hover:underline cursor-pointer m-0 mx-auto">Ovildaste tu contraseña</a>
             <div className="m-0">
               {
-                isLoding 
+                (API_MODE === 'rest' ? isLodingRest : loadingGql) 
                 ? (<Button variant="default" size="btnAuth" disabled>
                   <Loader2 className="animate-spin" />
                   Cargando

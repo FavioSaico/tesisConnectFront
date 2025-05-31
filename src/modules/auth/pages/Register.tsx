@@ -8,6 +8,17 @@ export const RegisterPage = () => {
 
   const [nextPage, setNextPage] = useState<boolean>(false);
 
+  const [dataPersonal, setDataPersonal] = useState<{
+    nombre: string,
+    apellidos: string,
+    correo: string,
+    contrasenia: string,
+  }>({
+    nombre: '',
+    apellidos: '',
+    correo: '',
+    contrasenia: '',
+  })
   // Queda hacer una revisión de la sesión
   return (
     <div className="container-auth">
@@ -15,8 +26,8 @@ export const RegisterPage = () => {
       <h1 className="title-register">Registro de usuario</h1>
         {
           !nextPage 
-          ? (<PersonalDataFrom setNextPage={setNextPage}/>)
-          : (<AcademicDataFrom setNextPage={setNextPage}/>)
+          ? (<PersonalDataFrom setNextPage={setNextPage} setDataPersonal={setDataPersonal}/>)
+          : (<AcademicDataFrom setNextPage={setNextPage} dataPersonal={dataPersonal}/>)
         }
         
       </div>

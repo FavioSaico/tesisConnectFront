@@ -27,10 +27,15 @@ const formSchema = z.object({
 
 interface Props {
   setNextPage: (value: React.SetStateAction<boolean>) => void;
+  setDataPersonal: (value: React.SetStateAction<{
+    nombre: string,
+    apellidos:  string,
+    correo:  string,
+    contrasenia:  string,
+  }>) => void;
 }
 
-
-export const PersonalDataFrom: React.FC<Props> = ({setNextPage}) => {
+export const PersonalDataFrom: React.FC<Props> = ({setNextPage, setDataPersonal}) => {
 
   // useform se basa en el tipo definido en el schema
   const form = useForm<z.infer<typeof formSchema>>({
@@ -45,14 +50,12 @@ export const PersonalDataFrom: React.FC<Props> = ({setNextPage}) => {
   
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // Tienen validación por su tipo de datos
     console.log(values);
 
     setNextPage(true);
+    setDataPersonal({...values})
   }
 
-  // Queda hacer una revisión de la sesión
   return (
     <>
       <h2 className="text-left text-base font-semibold mt-2 mb-4">Datos personales</h2>

@@ -25,6 +25,26 @@ export interface Especialidad {
     aniosExperiencia: number;
 }
 
+export interface EspecialidadItem {
+    id:     string;
+    nombre: string;
+}
+
+export interface GradoAcademicoItem {
+    id:     string;
+    nombre: string;
+}
+
+export interface CarreraProfesionalItem {
+    id:     string;
+    nombre: string;
+}
+
+export interface UniversidadItem {
+    id:     string;
+    nombre: string;
+}
+
 export interface GradoAcademico {
     id:     number;
     nombre: string;

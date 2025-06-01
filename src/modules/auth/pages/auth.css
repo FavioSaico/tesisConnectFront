@@ -6,7 +6,11 @@
 }
 
 .container-login {
-  @apply max-w-[500px] mx-auto my-auto p-10 border rounded-[10px] mt-14;
+  @apply max-w-[500px] mx-auto my-auto p-5 md:p-10  border rounded-[10px] mt-14;
+}
+
+.container-login-academic {
+  @apply max-w-[800px] mx-auto my-auto p-5 md:p-10  border rounded-[10px] mt-14;
 }
 
 .title {

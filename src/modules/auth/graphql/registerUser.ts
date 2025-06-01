@@ -36,6 +36,26 @@ export const GET_UNIVERSIDAD = gql`
   }
 `;
 
+export const GET_ORCID = gql`
+  query GetUserByOrcid($getUserByOrcidId: String!) {
+    getUserByOrcid(id: $getUserByOrcidId) {
+      orcid
+      nombre
+      apellido
+      url_perfil
+      url_linkedin
+      publicaciones {
+        titulo
+        doi
+        urlPublicacion
+        anioPublicacion
+        base_datos
+        journal
+      }
+    }
+  }
+`;
+
 export const REGISTER_USER = gql`
   mutation Register($registerDto: registerInput!) {
     register(registerDto: $registerDto) {

@@ -22,7 +22,7 @@ export const RegisterPage = () => {
   // Queda hacer una revisión de la sesión
   return (
     <div className="container-auth">
-      <div className="container-login">
+      <div className={`${!nextPage ? 'container-login': 'container-login-academic'}`}>
       <h1 className="title-register">Registro de usuario</h1>
         {
           !nextPage 

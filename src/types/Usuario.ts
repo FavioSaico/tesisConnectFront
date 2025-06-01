@@ -45,6 +45,32 @@ export interface UniversidadItem {
     nombre: string;
 }
 
+export interface PublicacionItem {
+    titulo: string; 
+    baseDatosBibliografica: string; 
+    revista: string; 
+    anioPublicacion: string; 
+    urlPublicacion: string;
+}
+
+export interface Orcid {
+    orcid: string
+    nombre: string
+    apellido: string
+    url_perfil: string
+    url_linkedin?: string
+    publicaciones: OrcidWork[]
+}
+
+export interface OrcidWork {
+    titulo: string,
+    doi: string,
+    urlPublicacion: string,
+    anioPublicacion: string,
+    base_datos: string,
+    journal: string
+}
+
 export interface GradoAcademico {
     id:     number;
     nombre: string;

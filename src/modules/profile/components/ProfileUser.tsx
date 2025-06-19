@@ -198,7 +198,7 @@ export const ProfileUser = () => {
         </header>
         <ul className="flex gap-2 flex-col mt-2">
           {
-            usuario.publicaciones.map((publicacion, i) => (
+            usuario.publicaciones.slice(0,9).map((publicacion, i) => (
               <li key={i} className="border rounded-[5px] p-2">
                 <p className="font-medium">{publicacion.titulo}</p>
                 <p>{publicacion.revista} {`(${publicacion.anioPublicacion})`}</p>

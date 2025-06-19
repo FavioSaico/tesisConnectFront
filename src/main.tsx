@@ -11,6 +11,7 @@ export const client = new ApolloClient({
   cache: new InMemoryCache(),
   // credentials: 'include', // Necesario si usas cookies
 });
+console.log(import.meta.env.VITE_URL_USUARIO);
 
 createRoot(document.getElementById('root')!).render(
   // <StrictMode>

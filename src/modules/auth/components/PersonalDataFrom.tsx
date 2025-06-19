@@ -41,10 +41,10 @@ export const PersonalDataFrom: React.FC<Props> = ({setNextPage, setDataPersonal}
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema), // resolver para hacer las validaciones
     defaultValues: {
-      nombre: "afsdgf",
-      apellidos: "asfsdgsd",
-      correo: "adasdda6@gmail.com",
-      contrasenia: "adfdsgsdg",
+      nombre: "",
+      apellidos: "",
+      correo: "",
+      contrasenia: "",
     },
   })
   

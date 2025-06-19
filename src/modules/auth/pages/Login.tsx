@@ -45,8 +45,8 @@ export const LoginPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      correo: "ana.martinez@universidad.edu",
-      contrasena: "securePass987",
+      correo: "",
+      contrasena: "",
     },
   })
 

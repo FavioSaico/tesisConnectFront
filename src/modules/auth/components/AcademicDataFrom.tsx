@@ -206,13 +206,19 @@ export const AcademicDataFrom: React.FC<Props> = ({setNextPage, dataPersonal}) =
     if( !data ) return;
     console.log(data)
 
-    form.setValue("publicaciones", data.getUserByOrcid.publicaciones.map((pu) => ({
+    const publicaciones = data.getUserByOrcid.publicaciones.map((pu) => ({
       titulo: pu.titulo, 
       baseDatosBibliografica: pu.base_datos,
       revista: pu.journal,
       anioPublicacion: pu.anioPublicacion,
       urlPublicacion: pu.urlPublicacion
-    })), { shouldValidate: true })
+    }));
+
+    const publicacionesUniques = Array.from(
+      new Map(publicaciones.map(item => [item.titulo, item])).values()
+    )
+
+    form.setValue("publicaciones", publicacionesUniques, { shouldValidate: true })
   }
 
   const registerGql = async (values: z.infer<typeof formSchema>) => {
@@ -236,11 +242,11 @@ export const AcademicDataFrom: React.FC<Props> = ({setNextPage, dataPersonal}) =
         })),
         // colocar un .slice(0,10) de ser necesario
         "publicaciones": values.publicaciones?.map(pu => ({
-          ...pu,
+          // ...pu,
           titulo: pu.titulo === '' ? '-' : pu.titulo, 
           baseDatosBibliografica: pu.baseDatosBibliografica === '' ? '-' : pu.baseDatosBibliografica,
           revista: pu.revista === '' ? '-' : pu.revista,
-          anioPublicacion: pu.anioPublicacion === '' ? 0 : Number(pu.anioPublicacion),
+          anioPublicacion: pu.anioPublicacion === '' ? 1 : Number(pu.anioPublicacion),
           urlPublicacion: pu.urlPublicacion === '' ? '-' : pu.urlPublicacion,
         })) ?? []
       }

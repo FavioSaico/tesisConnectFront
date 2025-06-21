@@ -7,6 +7,7 @@ import { ProfilePage } from "@/modules/profile/pages/Profile"
 import { Loader2 } from "lucide-react"
 import { Navigate, Route, Routes } from "react-router"
 import { Toaster } from "sonner"
+import { ForoRoutes } from "@/modules/foro/routes/ForoRoutes";
 
 export const AppRouter = () => {
 
@@ -23,6 +24,7 @@ export const AppRouter = () => {
   return (
     <>
       <Routes>
+        {ForoRoutes}
         {
           user 
           ? (

@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Categoria, Estado } from "@/types/Publicacion";
 import { Loader2 } from "lucide-react";
@@ -7,23 +8,24 @@ type Props = {
   categorias: Categoria[];
   estados: Estado[];
   onFiltrar: (filtros: FiltroValues) => void;
+  initialValues?: FiltroValues;
 };
 
 export type FiltroValues = {
   texto: string;
-  categorias: number[];
-  estados: number | "todos";
+  categorias: string[];
+  estados: string;
   ordenar: "recientes" | "antiguos" | "";
 };
 
-export const FiltroPublicaciones = ({ categorias, estados, onFiltrar }: Props) => {
+export const FiltroPublicaciones = ({ categorias, estados, onFiltrar, initialValues, }: Props) => {
   const {
     register,
     handleSubmit,
     reset,
     formState: { isSubmitting }
   } = useForm<FiltroValues>({
-    defaultValues: {
+    defaultValues: initialValues || {
       texto: "",
       categorias: [],
       estados: "todos",
@@ -31,34 +33,44 @@ export const FiltroPublicaciones = ({ categorias, estados, onFiltrar }: Props) =
     },
   });
 
+  const defaults: FiltroValues = {
+    texto: "",
+    categorias: [],
+    estados: "todos",
+    ordenar: "recientes",
+  };
+
+  useEffect(() => {
+  if (initialValues) {
+    const initialFormValues = {
+      ...defaults,
+      ...initialValues,
+      categorias: initialValues.categorias.map(String),
+      estados: String(initialValues.estados),
+    };
+    console.log("Filtros restablecidos:", initialValues);
+    reset(initialFormValues);
+  }
+  }, [initialValues, reset]);
+
   const onSubmit = (data: FiltroValues) => {
-    console.log("Filtros aplicados:", data);
+    console.log("Filtros buscados:", data);
     const filtro: FiltroValues = {
       texto: data.texto,
       categorias: data.categorias.map(Number), 
-      estados: data.estados,
+      estados: data.estados === "todos" ? "todos" : Number(data.estados),
       ordenar: data.ordenar,
     };
-
-    if (data.estados !== "todos") {
-      filtro.estados = Number(data.estados);
-    }
 
     onFiltrar(filtro);
   };
 
   const limpiarFiltros = () => {
     reset({
-      texto: "",
-      categorias: [],
-      estados: "todos",
-      ordenar: "recientes",
+      ...defaults,
     });
     onFiltrar({
-      texto: "",
-      categorias: [],
-      estados: "todos",
-      ordenar: "recientes",
+      ...defaults,
     });
   };
 
@@ -69,6 +81,7 @@ export const FiltroPublicaciones = ({ categorias, estados, onFiltrar }: Props) =
     >
       <h3 className="text-2xl font-bold text-black-1600">Filtrar publicaciones</h3>
 
+      {/* Buscar */}
       <div>
         <label className="text-xl font-bold text-black-1600">Buscar</label>
         <input
@@ -79,6 +92,7 @@ export const FiltroPublicaciones = ({ categorias, estados, onFiltrar }: Props) =
         />
       </div>
 
+      {/* Categorías (checkboxes) */}
       <div>
         <p className="text-xl font-bold text-black-1600">Categorías</p>
         {categorias.map((cat) => (
@@ -93,7 +107,8 @@ export const FiltroPublicaciones = ({ categorias, estados, onFiltrar }: Props) =
           </div>
         ))}
       </div>
-
+      
+      {/* Estado (radio) */}
       <div>
         <p className="font-semibold">Estado</p>
         <div className="flex flex-col gap-1">
@@ -118,6 +133,7 @@ export const FiltroPublicaciones = ({ categorias, estados, onFiltrar }: Props) =
         </div>
       </div>
 
+      {/* Ordenar por (radio) */}
       <div>
         <p className="text-xl font-bold text-black-1600">Ordenar por</p>
         <div className="flex flex-col gap-1">
@@ -140,6 +156,7 @@ export const FiltroPublicaciones = ({ categorias, estados, onFiltrar }: Props) =
         </div>
       </div>
 
+      {/* Acciones */}
       <div className="flex justify-between">
         <button
           type="button"

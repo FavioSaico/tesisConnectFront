@@ -116,8 +116,8 @@ export const FormNuevaPublicacion = ({ categorias, onPublicar }: Props) => {
         />
       </div>
       <h3 className="text-xl font-bold text-black-1600">Categoría</h3>
-      <div className="flex justify-between items-center">
-        <div className="w-full max-w-xs">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <div className="w-full sm:max-w-xs">
           <Controller
             name="idCategoria"
             control={control}
@@ -129,7 +129,7 @@ export const FormNuevaPublicacion = ({ categorias, onPublicar }: Props) => {
                   value={field.value ?? ""}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecciona una categoría" />
+                    <SelectValue placeholder="Escoge una categoría" />
                   </SelectTrigger>
                   <SelectContent>
                     {categorias.map((cat) => (
@@ -140,15 +140,19 @@ export const FormNuevaPublicacion = ({ categorias, onPublicar }: Props) => {
                   </SelectContent>
                 </Select>
                 {errors.idCategoria && (
-                  <p className="text-red-500 text-sm mt-1">{errors.idCategoria.message}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.idCategoria.message}
+                  </p>
                 )}
               </>
             )}
           />
         </div>
+
         <Button
           type="submit"
           size="btnForo"
+          className="w-full sm:w-auto sm:ml-auto"
           disabled={isSubmitting}
         >
           {isSubmitting ? (

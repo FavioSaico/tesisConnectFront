@@ -2,14 +2,18 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { BrowserRouter } from "react-router";
-import { ApolloProvider } from '@apollo/client';
-
+import { ApolloProvider, createHttpLink } from '@apollo/client';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 
+
+const httpLink = createHttpLink({
+  uri: `${import.meta.env.VITE_URL_USUARIO}/graphql`,
+  credentials: 'include'
+});
+
 export const client = new ApolloClient({
-  uri: `${import.meta.env.VITE_URL_USUARIO}/graphql`, // Cambia según tu backend
+  link: httpLink,
   cache: new InMemoryCache(),
-  // credentials: 'include', // Necesario si usas cookies
 });
 console.log(import.meta.env.VITE_URL_USUARIO);
 

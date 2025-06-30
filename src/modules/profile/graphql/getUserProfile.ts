@@ -39,3 +39,42 @@ export const GET_USER = gql`
     }
   }
 `;
+
+export const GET_USER_AUTHENTICATED = gql`
+  query GetUserAuthenticated {
+    getUserAuthenticated {
+      token
+      usuario {
+        id
+        nombres
+        apellidos
+        correo
+        carrera_profesional {
+          id
+          nombre
+        }
+        descripcion
+        linea_investigacion
+        orcid
+        rol_asesor
+        rol_tesista
+        especialidades {
+          idEspecialidad
+          nombreEspecialidad
+          aniosExperiencia
+        }
+        grado_academico {
+          id
+          nombre
+        }
+        publicaciones {
+          titulo
+          baseDatosBibliografica
+          revista
+          anioPublicacion
+          urlPublicacion
+        }
+      }
+    }
+  }
+`;

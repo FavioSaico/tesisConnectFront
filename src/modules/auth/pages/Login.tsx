@@ -60,7 +60,7 @@ export const LoginPage = () => {
     
     try {
 
-      if(API_MODE === 'rest') {
+      if(API_MODE === 'rest' || 1 === 1) {
         loginRest(values)
       }else{
         const { data } = await login({ variables: {
@@ -96,6 +96,7 @@ export const LoginPage = () => {
     setIsLoading(true);
     await fetch(`${URL_USUARIO}${PATH}`, {
       method: 'POST',
+      credentials: 'include',
       headers:{
         'Content-Type': 'application/json'
       },

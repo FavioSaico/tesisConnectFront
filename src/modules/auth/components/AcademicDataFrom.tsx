@@ -72,6 +72,8 @@ interface OrcidData {
 }
 
 const API_MODE = import.meta.env.VITE_API_MODE;
+const URL_USUARIO = import.meta.env.VITE_URL_USUARIO;
+const PATH = '/api/auth/register';
 
 const items = [
   {
@@ -123,6 +125,8 @@ const formSchema = z.object({
 })
 
 export const AcademicDataFrom: React.FC<Props> = ({setNextPage, dataPersonal}) => {
+
+  const [ loadingRest, setLoadingRest ] = useState(false);
 
   const { data: gradosAcademicosData, loading, error } = useQuery<GradoAcademicoData>(GET_GRADOS_ACADEMICOS);
   const { data: especialidadData, loading: loadingEspecialidades, error: errorEspecialidades } = useQuery<EspecialidadesData>(GET_ESPECIALIDADES);
@@ -195,7 +199,8 @@ export const AcademicDataFrom: React.FC<Props> = ({setNextPage, dataPersonal}) =
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
-    registerGql(values)
+    // registerGql(values)
+    registerRest(values)
   }
 
   const validarCodigoOrcid = async (orcid: string) => {
@@ -221,6 +226,78 @@ export const AcademicDataFrom: React.FC<Props> = ({setNextPage, dataPersonal}) =
     form.setValue("publicaciones", publicacionesUniques, { shouldValidate: true })
   }
 
+  const registerRest = async (values: z.infer<typeof formSchema>) => {
+    setLoadingRest(true);
+    await fetch(`${URL_USUARIO}${PATH}`, {
+      method: 'POST',
+      credentials: 'include',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "correo": dataPersonal.correo,
+        "contrasena": dataPersonal.contrasenia,
+        "nombres": dataPersonal.nombre,
+        "apellidos": dataPersonal.apellidos,
+        "descripcion": values.descripcion,
+        "rol_tesista": values.roles.some(rol => rol === '1'),
+        "rol_asesor": values.roles.some(rol => rol === '2'),
+        "orcid": values.orcid ?? '',
+        "id_grado_academico": Number(values.gradoAcademico),
+        "id_universidad": Number(values.universidad),
+        "linea_investigacion": values.lineaInvestigacion,
+        "id_carrera_profesional": Number(values.carreraProfesional),
+        "especialidades": values.especialidades.map(es => ({
+          "idEspecialidad": Number(es.id),
+          "aniosExperiencia": 3
+        })),
+        // colocar un .slice(0,10) de ser necesario
+        "publicaciones": values.publicaciones?.map(pu => ({
+          titulo: pu.titulo === '' ? '-' : pu.titulo, 
+          baseDatosBibliografica: pu.baseDatosBibliografica === '' ? '-' : pu.baseDatosBibliografica,
+          revista: pu.revista === '' ? '-' : pu.revista,
+          anioPublicacion: pu.anioPublicacion === '' ? 1 : Number(pu.anioPublicacion),
+          urlPublicacion: pu.urlPublicacion === '' ? '-' : pu.urlPublicacion,
+        })) ?? []
+      })
+    })
+    .then(res => res.json())
+    .then(res => {
+
+      if(res.message) {
+        toast.error("Error", {
+          description: res.error ?? res.message,
+          closeButton: true,
+          icon: <CircleX className="text-destructive"/>,
+        })
+      }else{
+        const session = res as AuthResponse;
+
+        setUserLS(session);
+
+        toast.success("Autenticación completada", {
+          closeButton: true,
+          icon: <Check className="text-green-700" />,
+        })
+
+        setTimeout(() => {
+          navigate({
+            pathname:`/profile/${session.usuario?.id}`
+          });
+        }, 1000);
+      }
+      setLoadingRest(false)
+    })
+    .catch(() => {
+      toast.error("Error", {
+        description: 'Error en la autenticación',
+        closeButton: true,
+        icon: <CircleX className="text-destructive"/>,
+      })
+    })
+    .finally(() => {setLoadingRest(false)})
+  }
+
   const registerGql = async (values: z.infer<typeof formSchema>) => {
     const { data } = await register({ variables: {
       registerDto: {
@@ -242,7 +319,6 @@ export const AcademicDataFrom: React.FC<Props> = ({setNextPage, dataPersonal}) =
         })),
         // colocar un .slice(0,10) de ser necesario
         "publicaciones": values.publicaciones?.map(pu => ({
-          // ...pu,
           titulo: pu.titulo === '' ? '-' : pu.titulo, 
           baseDatosBibliografica: pu.baseDatosBibliografica === '' ? '-' : pu.baseDatosBibliografica,
           revista: pu.revista === '' ? '-' : pu.revista,
@@ -742,7 +818,7 @@ export const AcademicDataFrom: React.FC<Props> = ({setNextPage, dataPersonal}) =
           {
             isMobile && <div className="flex flex-col gap-2 m-0 mt-3">
               {
-                (loadingGql) 
+                (loadingGql || loadingRest) 
                   ? (<Button variant="default" size="btnAuth" disabled>
                     <Loader2 className="animate-spin" />
                     Cargando

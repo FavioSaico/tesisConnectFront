@@ -86,7 +86,7 @@ export const FormNuevaPublicacion = ({ categorias, onPublicar }: Props) => {
             <>
               <Textarea
                 placeholder="Título de la publicación"
-                className="resize-y"
+                className="resize-none min-h-[38px]"
                 {...field}
               />
               {errors.titulo && (
@@ -116,7 +116,7 @@ export const FormNuevaPublicacion = ({ categorias, onPublicar }: Props) => {
         />
       </div>
       <h3 className="text-xl font-bold text-black-1600">Categoría</h3>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className="flex flex-col sm:flex-row items-start sm:items-start gap-3">
         <div className="w-full sm:max-w-xs">
           <Controller
             name="idCategoria"
@@ -140,7 +140,7 @@ export const FormNuevaPublicacion = ({ categorias, onPublicar }: Props) => {
                   </SelectContent>
                 </Select>
                 {errors.idCategoria && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p className="text-red-500 text-sm mt-1 min-h-[36px]">
                     {errors.idCategoria.message}
                   </p>
                 )}
@@ -152,7 +152,7 @@ export const FormNuevaPublicacion = ({ categorias, onPublicar }: Props) => {
         <Button
           type="submit"
           size="btnForo"
-          className="w-full sm:w-auto sm:ml-auto"
+          className="w-full sm:w-auto sm:ml-auto min-h-[36px]"
           disabled={isSubmitting}
         >
           {isSubmitting ? (

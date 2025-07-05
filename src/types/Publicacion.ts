@@ -1,12 +1,20 @@
 export interface Publicacion {
-  id:             number;
+  idPublicacion:  number;
   titulo:         string;
   contenido:      string;
   idEstado:       number;
   idCategoria:    number;
   fechaCreacion:  string;
   idUsuario:      number;
+  idComentarioRespuesta: string | null;
 }
+
+export type NuevaPublicacion = {
+  titulo:         string;
+  contenido:      string;
+  idCategoria:    number;
+  idUsuario:      number;
+};
 
 export interface Categoria {
   id:             number;

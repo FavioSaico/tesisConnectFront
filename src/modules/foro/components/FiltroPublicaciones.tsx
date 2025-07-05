@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Categoria, Estado } from "@/types/Publicacion";
 import { Loader2 } from "lucide-react";
+import { useLocation, useNavigate } from "react-router"; 
 
 type Props = {
   categorias: Categoria[];
@@ -32,7 +33,8 @@ export const FiltroPublicaciones = ({ categorias, estados, onFiltrar, initialVal
       ordenar: "recientes",
     },
   });
-
+  const location = useLocation();
+  const navigate = useNavigate();
   const defaults: FiltroValues = {
     texto: "",
     categorias: [],
@@ -57,10 +59,28 @@ export const FiltroPublicaciones = ({ categorias, estados, onFiltrar, initialVal
     console.log("Filtros buscados:", data);
     const filtro: FiltroValues = {
       texto: data.texto,
-      categorias: data.categorias.map(Number), 
-      estados: data.estados === "todos" ? "todos" : Number(data.estados),
+      categorias: data.categorias, 
+      estados: data.estados,
       ordenar: data.ordenar,
     };
+    
+    const estaEnForo = location.pathname === "/foro";
+
+    if (!estaEnForo) {
+      const query = new URLSearchParams();
+      if (filtro.texto) query.set("texto", filtro.texto);
+      if (filtro.categorias.length > 0) {
+        filtro.categorias.forEach((cat) => query.append("categorias", cat));
+      }
+      if (filtro.estados && filtro.estados !== "todos") {
+        query.set("estados", filtro.estados);
+      }
+      if (filtro.ordenar) query.set("ordenar", filtro.ordenar);
+
+      navigate(`/foro?${query.toString()}`);
+    } else {
+      onFiltrar(filtro);
+    }
 
     onFiltrar(filtro);
   };
@@ -161,7 +181,7 @@ export const FiltroPublicaciones = ({ categorias, estados, onFiltrar, initialVal
         <button
           type="button"
           onClick={limpiarFiltros}
-          className="text-sm text-gray-500 underline"
+          className="text-sm text-gray-500 hover:underline"
         >
           Limpiar filtros
         </button>

@@ -56,7 +56,7 @@ export const ForoLayout = () => {
         <div className="logo_container max-w-14">
           <img src={logo} alt="logo_tesisconnect" className="w-full" />
         </div>
-        <h1 className="text-3xl font-bold text-blue-950">Foro Académico</h1>
+        <h1 className="text-3xl font-bold text-blue-950 text-center">Foro Académico</h1>
         <OptionsUser />
       </header>
 

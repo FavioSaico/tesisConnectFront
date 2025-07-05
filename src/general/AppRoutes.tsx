@@ -10,6 +10,7 @@ import { Toaster } from "sonner"
 import { ForoRoutes } from "@/modules/foro/routes/ForoRoutes";
 import { ForoPage } from "@/modules/foro/pages/Foro"
 import { ForoLayout } from "@/modules/foro/layout/ForoLayout"
+import { PublicacionPage } from "@/modules/foro/pages/Publicacion"
 
 export const AppRouter = () => {
 
@@ -26,7 +27,7 @@ export const AppRouter = () => {
   return (
     <>
       <Routes>
-        {ForoRoutes}
+        {/* {ForoRoutes} */}
         {
           user 
           ? (
@@ -38,6 +39,7 @@ export const AppRouter = () => {
               </Route>
               <Route path="foro" element={<ForoLayout />}>
                 <Route index element={<ForoPage />} />
+                <Route path="publicacion/:id" element={<PublicacionPage />} />
               </Route>
               <Route path='/*' element={ <Navigate to={`/profile/${user.usuario.id}`} /> }/> 
             </>

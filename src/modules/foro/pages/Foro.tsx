@@ -79,12 +79,12 @@ export const ForoPage = () => {
     )
     .filter((p) =>
       filtrosActivos.categorias.length > 0
-        ? filtrosActivos.categorias.includes(p.idCategoria)
+        ? filtrosActivos.categorias.includes(p.idCategoria.toString())
         : true
     )
     .filter((p) =>
       filtrosActivos.estados !== "todos"
-        ? p.idEstado === filtrosActivos.estados
+        ? p.idEstado.toString() === filtrosActivos.estados
         : true
     )
     .sort((a, b) => {

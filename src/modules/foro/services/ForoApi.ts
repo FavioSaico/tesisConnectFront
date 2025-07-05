@@ -44,8 +44,9 @@ export async function getEstados(): Promise<Estado[]> {
 export async function getUsuarioSimple(id: number): Promise<{ nombreCompleto: string }> {
   const res = await fetch(`${import.meta.env.VITE_URL_USUARIO}/graphql`, {
     method: "POST",
+    credentials: 'include',
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       query: `

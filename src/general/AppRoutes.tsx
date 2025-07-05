@@ -8,6 +8,8 @@ import { Loader2 } from "lucide-react"
 import { Navigate, Route, Routes } from "react-router"
 import { Toaster } from "sonner"
 import { ForoRoutes } from "@/modules/foro/routes/ForoRoutes";
+import { ForoPage } from "@/modules/foro/pages/Foro"
+import { ForoLayout } from "@/modules/foro/layout/ForoLayout"
 
 export const AppRouter = () => {
 
@@ -33,6 +35,9 @@ export const AppRouter = () => {
                 <Route element={<ProfileLayout/>}>
                   <Route path=":id" element={<ProfilePage/>}/>
                 </Route>
+              </Route>
+              <Route path="foro" element={<ForoLayout />}>
+                <Route index element={<ForoPage />} />
               </Route>
               <Route path='/*' element={ <Navigate to={`/profile/${user.usuario.id}`} /> }/> 
             </>

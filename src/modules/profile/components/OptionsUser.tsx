@@ -21,8 +21,16 @@ export const OptionsUser = () => {
     return (<>Cargando ...</>)
   }
 
-  if(!user){
-    return (<>Usuario no existe</>)
+  if (!user) {
+    return (
+      <Button
+        variant="outline"
+        onClick={() => navigate("/auth/login")}
+        className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-550 text-sm hover:text-white"
+      >
+        Iniciar sesión
+      </Button>
+    );
   }
 
   const usuario = user.usuario ;

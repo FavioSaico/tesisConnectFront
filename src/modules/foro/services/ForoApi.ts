@@ -1,5 +1,5 @@
-import { Publicacion, Categoria, Estado, FiltroPublicaciones } from "@/types/Publicacion";
-
+import { Publicacion, NuevaPublicacion, Categoria, Estado, FiltroPublicaciones } from "@/types/Publicacion";
+import { Comentario, NuevoComentario } from "@/types/Comentario";
 
 export async function getPublicaciones(filtros: FiltroPublicaciones): Promise<Publicacion[]> {
   const params = new URLSearchParams();
@@ -22,6 +22,18 @@ export async function getPublicaciones(filtros: FiltroPublicaciones): Promise<Pu
   if (!res.ok) {
     throw new Error("Error al cargar publicaciones");
   }
+  return await res.json();
+}
+
+export async function getPublicacionById(id: number): Promise<Publicacion> {
+  const res = await fetch(`${import.meta.env.VITE_URL_FORO}/publicaciones/${id}`);
+
+  if (!res.ok) {
+    const errorData = await res.text();
+    console.error("Error al obtener la publicación:", errorData);
+    throw new Error("No se pudo obtener la publicación");
+  }
+
   return await res.json();
 }
 
@@ -74,13 +86,6 @@ export async function getUsuarioSimple(id: number): Promise<{ nombreCompleto: st
   return { nombreCompleto: `${data.nombres} ${data.apellidos}` };
 }
 
-type NuevaPublicacion = {
-  titulo: string;
-  contenido: string;
-  idCategoria: number;
-  idUsuario: number;
-};
-
 export async function crearPublicacion(data: NuevaPublicacion): Promise<void> {
   const res = await fetch(`${import.meta.env.VITE_URL_FORO}/publicaciones/`, {
     method: "POST",
@@ -104,5 +109,64 @@ export async function crearPublicacion(data: NuevaPublicacion): Promise<void> {
     }
     console.error("Error al crear publicación:", errorMsg);
     throw new Error(errorMsg);
+  }
+}
+
+export async function crearComentario(idPublicacion: number, data: NuevoComentario): Promise<void> {
+  const res = await fetch(
+    `${import.meta.env.VITE_URL_FORO}/publicaciones/${idPublicacion}/comentarios`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  );
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error("Error al crear comentario:", errorText);
+    throw new Error("No se pudo crear el comentario");
+  }
+}
+
+export async function getComentarios(publicacionId: number): Promise<{total: number, comentarios: Comentario[]}> {
+  const res = await fetch(`${import.meta.env.VITE_URL_FORO}/publicaciones/${publicacionId}/comentarios`);
+  if (!res.ok) throw new Error("Error al obtener comentarios");
+  const data = await res.json();
+  return data;
+}
+
+export async function marcarComentario(idPublicacion: number, idComentario: String): Promise<void> {
+  const res = await fetch(
+    `${import.meta.env.VITE_URL_FORO}/publicaciones/${idPublicacion}/comentarios/${idComentario}/marcar_respuesta`, 
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  )
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error("Error al marcar comentario:", errorText);
+    throw new Error("No se pudo marcar el comentario");
+  }
+}
+
+export async function desmarcarComentario(idPublicacion: number): Promise<void> {
+  const res = await fetch(
+    `${import.meta.env.VITE_URL_FORO}/publicaciones/${idPublicacion}/desmarcar_respuesta`, 
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  )
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error("Error al desmarcar comentario:", errorText);
+    throw new Error("No se pudo desmarcar el comentario");
   }
 }

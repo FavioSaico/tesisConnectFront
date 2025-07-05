@@ -107,7 +107,7 @@ export const ForoPage = () => {
 
         {publicacionesFiltradas.map((p) => (
           <PublicacionCard
-            key={p.id}
+            key={p.idPublicacion}
             publicacion={p}
             nombreAutor={usuariosCache.get(p.idUsuario)}
           />

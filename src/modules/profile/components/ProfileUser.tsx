@@ -10,6 +10,8 @@ import logoOrcid from "/orcid.logo.svg";
 import { ModalSolicitarAsesoria } from "./ModalSolicitarAsesoria";
 import { GET_USER } from "../graphql/getUserProfile";
 import { useLazyQuery } from "@apollo/client";
+import { MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const URL_USUARIO = import.meta.env.VITE_URL_USUARIO;
 const API_MODE = import.meta.env.VITE_API_MODE;
@@ -147,6 +149,21 @@ export const ProfileUser = () => {
                     )
                   }
                 </div>
+                {
+                  id !== currentUser?.id && (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        window.dispatchEvent(new CustomEvent('openChat', { detail: { userId: id } }));
+                      }}
+                      className="flex gap-2 items-center"
+                    >
+                      <MessageCircle size={14} />
+                      Mensaje
+                    </Button>
+                  )
+                }
                 <article className="mb-1 md:mb-0 md:ml-auto">
                   {
                     id !== currentUser?.id && usuario.rol_asesor 

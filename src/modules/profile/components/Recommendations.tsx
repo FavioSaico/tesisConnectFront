@@ -275,9 +275,10 @@ export const Recomendations = () => {
                             <Progress value={usuario.puntaje} className="w-[40%]" />
                             <p className="text-xs">{usuario.puntaje}% de afinidad</p>
                           </div>
-                          <Button variant="default" size='sm' className="cursor-pointer max-w-32 mt-auto">
+                          <Button
+                          onClick={() => window.dispatchEvent(new CustomEvent('openChat', { detail: { userId: usuario.id } }))}>
                             <UserRoundPlus />
-                            Conectar
+                          Conectar
                           </Button>
                         </div>
                       </li>

@@ -48,7 +48,7 @@ interface Props {
   destinatarioId: string
 }
 
-const URL_BASE = 'https://api-usuario-609569711189.us-central1.run.app'; //import.meta.env.VITE_URL_BASE;
+const URL_BASE = import.meta.env.VITE_URL_USUARIO;
 const PATH = '/api/notification/sendNotication';
 
 export const ModalSolicitarAsesoria: React.FC<Props> = ({remitenteId, destinatarioId}) => {

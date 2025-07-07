@@ -56,13 +56,13 @@ export const FormNuevoComentario = ({ idPublicacion, idComentarioPadre, onComent
       onSubmit={handleSubmit(onSubmit)} 
       className="border border-gray-300 rounded-xl py-6 px-8 shadow-sm space-y-2.5"
     >
-      <h3 className="text-2xl font-bold text-black-1600">Añadir comentario</h3>
+      <h3 className="text-[20px] font-bold text-black-1600">Añadir comentario</h3>
       <div className="flex flex-col sm:flex-row items-start sm:items-start gap-x-8 gap-y-4">
         <div className="w-full">
         <Controller
           name="contenido"
           control={control}
-          rules={{ required: "*el campo es obligatorio" }}
+          rules={{ required: "* El campo es obligatorio" }}
           render={({ field }) => (
             <>
               <Textarea

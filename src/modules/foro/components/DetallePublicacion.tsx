@@ -24,7 +24,7 @@ export const DetallePublicacion = ({ publicacion, nombreAutor }: Props) => {
         </div>
       )}
 
-      <h2 className="text-3xl font-bold text-blue-900">{titulo}</h2> 
+      <h2 className="text-2xl font-bold text-blue-900">{titulo}</h2> 
 
       <div className="flex justify-between text-base text-gray-600">
         <p className="text-sky-700 font-bold">
@@ -33,7 +33,7 @@ export const DetallePublicacion = ({ publicacion, nombreAutor }: Props) => {
         <span>{fecha}</span>
       </div>
 
-      <p className="text-lg text-gray-800">{contenido}</p>
+      <p className="text-[1.1rem] text-gray-800">{contenido}</p>
     </div>
   );
 };

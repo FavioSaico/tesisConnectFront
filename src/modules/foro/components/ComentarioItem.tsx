@@ -82,7 +82,7 @@ export const ComentarioItem = ({ comentario, usuarios, nivel, onComentarioCreado
       </div>
 
       {/* Contenido */}
-      <p className="mt-2 text-gray-800 text-lg">{contenido}</p>
+      <p className="mt-2 text-gray-800 text-[1rem]">{contenido}</p>
 
       {/* Footer */}
       <div className="mt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-gray-500 gap-2">

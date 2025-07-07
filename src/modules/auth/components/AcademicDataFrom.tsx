@@ -136,6 +136,8 @@ export const AcademicDataFrom: React.FC<Props> = ({setNextPage, dataPersonal}) =
   const [ getOrcid, { loading: isLoadingOrcidGql, error: errorGetOrcid }] = useLazyQuery<OrcidData, { getUserByOrcidId: string }>(GET_ORCID);
 
   const [register, { loading: loadingGql, error: errorRegister }] = useMutation(REGISTER_USER);
+
+  console.log(register)
   // useform se basa en el tipo definido en el schema
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -298,53 +300,53 @@ export const AcademicDataFrom: React.FC<Props> = ({setNextPage, dataPersonal}) =
     .finally(() => {setLoadingRest(false)})
   }
 
-  const registerGql = async (values: z.infer<typeof formSchema>) => {
-    const { data } = await register({ variables: {
-      registerDto: {
-        "correo": dataPersonal.correo,
-        "contrasena": dataPersonal.contrasenia,
-        "nombres": dataPersonal.nombre,
-        "apellidos": dataPersonal.apellidos,
-        "descripcion": values.descripcion,
-        "rol_tesista": values.roles.some(rol => rol === '1'),
-        "rol_asesor": values.roles.some(rol => rol === '2'),
-        "orcid": values.orcid ?? '',
-        "id_grado_academico": Number(values.gradoAcademico),
-        "id_universidad": Number(values.universidad),
-        "linea_investigacion": values.lineaInvestigacion,
-        "id_carrera_profesional": Number(values.carreraProfesional),
-        "especialidades": values.especialidades.map(es => ({
-          "idEspecialidad": Number(es.id),
-          "aniosExperiencia": 3
-        })),
-        // colocar un .slice(0,10) de ser necesario
-        "publicaciones": values.publicaciones?.map(pu => ({
-          titulo: pu.titulo === '' ? '-' : pu.titulo, 
-          baseDatosBibliografica: pu.baseDatosBibliografica === '' ? '-' : pu.baseDatosBibliografica,
-          revista: pu.revista === '' ? '-' : pu.revista,
-          anioPublicacion: pu.anioPublicacion === '' ? 1 : Number(pu.anioPublicacion),
-          urlPublicacion: pu.urlPublicacion === '' ? '-' : pu.urlPublicacion,
-        })) ?? []
-      }
-    }});
+  // const registerGql = async (values: z.infer<typeof formSchema>) => {
+  //   const { data } = await register({ variables: {
+  //     registerDto: {
+  //       "correo": dataPersonal.correo,
+  //       "contrasena": dataPersonal.contrasenia,
+  //       "nombres": dataPersonal.nombre,
+  //       "apellidos": dataPersonal.apellidos,
+  //       "descripcion": values.descripcion,
+  //       "rol_tesista": values.roles.some(rol => rol === '1'),
+  //       "rol_asesor": values.roles.some(rol => rol === '2'),
+  //       "orcid": values.orcid ?? '',
+  //       "id_grado_academico": Number(values.gradoAcademico),
+  //       "id_universidad": Number(values.universidad),
+  //       "linea_investigacion": values.lineaInvestigacion,
+  //       "id_carrera_profesional": Number(values.carreraProfesional),
+  //       "especialidades": values.especialidades.map(es => ({
+  //         "idEspecialidad": Number(es.id),
+  //         "aniosExperiencia": 3
+  //       })),
+  //       // colocar un .slice(0,10) de ser necesario
+  //       "publicaciones": values.publicaciones?.map(pu => ({
+  //         titulo: pu.titulo === '' ? '-' : pu.titulo, 
+  //         baseDatosBibliografica: pu.baseDatosBibliografica === '' ? '-' : pu.baseDatosBibliografica,
+  //         revista: pu.revista === '' ? '-' : pu.revista,
+  //         anioPublicacion: pu.anioPublicacion === '' ? 1 : Number(pu.anioPublicacion),
+  //         urlPublicacion: pu.urlPublicacion === '' ? '-' : pu.urlPublicacion,
+  //       })) ?? []
+  //     }
+  //   }});
 
-    if (data?.register) {
-      const session = data?.register as AuthResponse;
+  //   if (data?.register) {
+  //     const session = data?.register as AuthResponse;
 
-      setUserLS(session);
+  //     setUserLS(session);
 
-      toast.success("Autenticación completada", {
-        closeButton: true,
-        icon: <Check className="text-green-700" />,
-      })
+  //     toast.success("Autenticación completada", {
+  //       closeButton: true,
+  //       icon: <Check className="text-green-700" />,
+  //     })
 
-      setTimeout(() => {
-        navigate({
-          pathname:`/profile/${session.usuario?.id}`
-        });
-      }, 1000);
-    }
-  }
+  //     setTimeout(() => {
+  //       navigate({
+  //         pathname:`/profile/${session.usuario?.id}`
+  //       });
+  //     }, 1000);
+  //   }
+  // }
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

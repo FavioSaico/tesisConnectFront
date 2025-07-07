@@ -240,7 +240,7 @@ export const Recomendations = () => {
                       <div className="relative w-[55px]">
                         <img src={perfilDefault} alt="" className="w-[55px]"/>
                       </div>
-                      <div className="flex flex-col gap-2 h-full max-w-[264px]">
+                      <div className="flex flex-col gap-2 h-full max-w-[264px] flex-1">
                         <p className="font-medium">{`${usuario.nombres} ${usuario.apellidos}`}</p>
                         <p className="text-xs">{usuario.linea_investigacion}</p>
                         <div className="flex gap-4 items-center">

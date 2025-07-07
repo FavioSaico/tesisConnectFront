@@ -1,14 +1,14 @@
 // import { useEffect, useState } from "react";
 import { Outlet } from "react-router";
-import { OptionsUser } from "../components/OptionsUser";
-import { Searcher } from "../components/Searcher";
 import logo from "/logo_ico.png";
+import { OptionsUser } from "@/modules/profile/components/OptionsUser";
+import { Searcher } from "@/modules/profile/components/Searcher";
 
 interface Props {
   children?: React.ReactNode;
 }
 
-export const ProfileLayout: React.FC<Props> = () => {
+export const SearchLayout: React.FC<Props> = ({children}) => {
 
   return (
     <div className="w-full min-h-screen p-5">
@@ -20,7 +20,7 @@ export const ProfileLayout: React.FC<Props> = () => {
         <OptionsUser/>
       </header>
       <Outlet />
-      
+      {children}
     </div>
   )
 }

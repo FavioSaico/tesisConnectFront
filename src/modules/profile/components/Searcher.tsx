@@ -1,7 +1,6 @@
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -12,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Search } from "lucide-react"
+import { useNavigate, useSearchParams } from "react-router"
 
 const formSchema = z.object({
   buscador: z.string(),
@@ -19,17 +19,29 @@ const formSchema = z.object({
 
 export const Searcher = () => {
   
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get("q") ?? "";
+
   // useform se basa en el tipo definido en el schema
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      buscador: ""
+      buscador: searchTerm
     },
   })
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+
+    if(values.buscador === '') {
+
+    }else{
+      console.log(encodeURIComponent(values.buscador))
+      navigate(`/search?q=${encodeURIComponent(values.buscador)}`);
+    }
+
   }
 
   return (
@@ -48,7 +60,7 @@ export const Searcher = () => {
                 </FormItem>
               )}
             />
-            <Button variant="outline" size="icon" className="border-0 shadow-none focus-visible:ring-0 rounded-[20px]">
+            <Button variant="outline" size="icon" className="border-0 shadow-none focus-visible:ring-0 rounded-[20px] cursor-pointer">
               <Search />
             </Button>
           </form>

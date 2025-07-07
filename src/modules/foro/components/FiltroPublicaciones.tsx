@@ -97,13 +97,13 @@ export const FiltroPublicaciones = ({ categorias, estados, onFiltrar, initialVal
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="border border-gray-300 rounded-xl py-6 px-8 shadow-sm space-y-4 overflow-y-auto"
+      className="border border-gray-300 rounded-xl py-5 px-6 shadow-sm space-y-4 overflow-y-auto"
     >
-      <h3 className="text-2xl font-bold text-black-1600">Filtrar publicaciones</h3>
+      <h3 className="text-xl font-bold text-black-1600">Filtrar publicaciones</h3>
 
       {/* Buscar */}
       <div>
-        <label className="text-xl font-bold text-black-1600">Buscar</label>
+        <label className="text-[1rem] font-semibold text-black-1600">Buscar</label>
         <input
           type="text"
           {...register("texto")}
@@ -114,25 +114,25 @@ export const FiltroPublicaciones = ({ categorias, estados, onFiltrar, initialVal
 
       {/* Categorías (checkboxes) */}
       <div>
-        <p className="text-xl font-bold text-black-1600">Categorías</p>
+        <p className="text-[1rem] font-semibold text-black-1600">Categorías</p>
         {categorias.map((cat) => (
-          <div key={cat.id} className="flex items-center gap-2">
+          <div key={cat.id} className="flex items-center gap-2 mt-0.5">
             <input
               type="checkbox"
               value={cat.id}
               {...register("categorias")}
               id={`cat-${cat.id}`}
             />
-            <label htmlFor={`cat-${cat.id}`}>{cat.nombre}</label>
+            <label htmlFor={`cat-${cat.id}`} className="text-sm">{cat.nombre}</label>
           </div>
         ))}
       </div>
       
       {/* Estado (radio) */}
       <div>
-        <p className="font-semibold">Estado</p>
+        <p className="font-semibold text-[1rem]">Estado</p>
         <div className="flex flex-col gap-1">
-          <label className="flex items-center gap-2">
+          <label className="flex items-center gap-2 text-sm">
             <input
               type="radio"
               value="todos"
@@ -141,7 +141,7 @@ export const FiltroPublicaciones = ({ categorias, estados, onFiltrar, initialVal
             Todos
           </label>
           {estados.map((estado) => (
-            <label key={estado.id} className="flex items-center gap-2">
+            <label key={estado.id} className="flex items-center gap-2 text-sm">
               <input
                 type="radio"
                 value={estado.id}
@@ -155,9 +155,9 @@ export const FiltroPublicaciones = ({ categorias, estados, onFiltrar, initialVal
 
       {/* Ordenar por (radio) */}
       <div>
-        <p className="text-xl font-bold text-black-1600">Ordenar por</p>
+        <p className="text-[1rem] font-semibold text-black-1600">Ordenar por</p>
         <div className="flex flex-col gap-1">
-          <label className="flex items-center gap-2">
+          <label className="flex items-center gap-2 text-sm">
             <input
               type="radio"
               value="recientes"
@@ -165,7 +165,7 @@ export const FiltroPublicaciones = ({ categorias, estados, onFiltrar, initialVal
             />
             Más recientes
           </label>
-          <label className="flex items-center gap-2">
+          <label className="flex items-center gap-2 text-sm">
             <input
               type="radio"
               value="antiguos"
@@ -181,11 +181,11 @@ export const FiltroPublicaciones = ({ categorias, estados, onFiltrar, initialVal
         <button
           type="button"
           onClick={limpiarFiltros}
-          className="text-sm text-gray-500 hover:underline"
+          className="text-sm text-gray-500 hover:bg-gray-100 cursor-pointer rounded-[3px] border-1 px-2 py-1"
         >
           Limpiar filtros
         </button>
-        <Button type="submit" size="btnForo" disabled={isSubmitting}>
+        <Button type="submit" size="btnForo" disabled={isSubmitting} className="cursor-pointer">
           {isSubmitting ? (
             <span className="flex items-center gap-2">
               <Loader2 className="animate-spin size-4" />

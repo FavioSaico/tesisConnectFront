@@ -76,7 +76,7 @@ export const FormNuevaPublicacion = ({ categorias, onPublicar }: Props) => {
       onSubmit={handleSubmit(onSubmit)}
       className="border border-gray-300 rounded-xl py-6 px-8 shadow-sm space-y-2.5"
     >
-      <h3 className="text-2xl font-bold text-black-1600">Nueva publicación</h3>
+      <h3 className="text-xl font-bold text-black-1600">Nueva publicación</h3>
       <div>
         <Controller
           name="titulo"
@@ -115,7 +115,7 @@ export const FormNuevaPublicacion = ({ categorias, onPublicar }: Props) => {
           )}
         />
       </div>
-      <h3 className="text-xl font-bold text-black-1600">Categoría</h3>
+      <h3 className="text-[1rem] font-bold text-black-1600">Categoría</h3>
       <div className="flex flex-col sm:flex-row items-start sm:items-start gap-3">
         <div className="w-full sm:max-w-xs">
           <Controller
@@ -152,7 +152,7 @@ export const FormNuevaPublicacion = ({ categorias, onPublicar }: Props) => {
         <Button
           type="submit"
           size="btnForo"
-          className="w-full sm:w-auto sm:ml-auto min-h-[36px]"
+          className="w-full sm:w-auto sm:ml-auto min-h-[36px] cursor-pointer"
           disabled={isSubmitting}
         >
           {isSubmitting ? (

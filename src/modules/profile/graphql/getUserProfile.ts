@@ -74,6 +74,10 @@ export const GET_USER_AUTHENTICATED = gql`
           anioPublicacion
           urlPublicacion
         }
+        universidad {
+          id
+          nombre
+        }
       }
     }
   }

@@ -34,6 +34,10 @@ export const LOGIN_USER = gql`
           anioPublicacion
           urlPublicacion
         }
+        universidad {
+          id
+          nombre
+        }
       }
     }
   }

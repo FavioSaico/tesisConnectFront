@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { CircleX, Loader2, Pencil } from "lucide-react";
+import { CircleX, Loader2, Pencil, SquareArrowOutUpRight } from "lucide-react";
 import { useParams } from "react-router";
 import { toast } from "sonner";
 import { useSession } from "@/context/AuthContext";
 import { Usuario } from "@/types/Usuario";
 import portadaDefault from "/portada.jpg";
 import perfilDefault from "/perfil.png";
+import logoOrcid from "/orcid.logo.svg";
 import { ModalSolicitarAsesoria } from "./ModalSolicitarAsesoria";
 import { GET_USER } from "../graphql/getUserProfile";
 import { useLazyQuery } from "@apollo/client";
@@ -128,9 +129,9 @@ export const ProfileUser = () => {
         <div className="mt-10 flex flex-col gap-4 px-4 pb-4">
           <article>
             {/* Nombres */}
-            <div className="">
-              <div className="flex gap-4">
-                <p className="text-2xl font-semibold">{usuario.nombres} {usuario.apellidos}</p>
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-2 flex-col md:flex-row md:gap-4 md:items-center">
+                <p className="text-[1.2rem] md:text-2xl font-semibold">{usuario.nombres} {usuario.apellidos}</p>
                 {/* Roles */}
                 <div className="flex gap-2">
                   {
@@ -146,7 +147,7 @@ export const ProfileUser = () => {
                     )
                   }
                 </div>
-                <article className="ml-auto">
+                <article className="mb-1 md:mb-0 md:ml-auto">
                   {
                     id !== currentUser?.id && usuario.rol_asesor 
                     ? <ModalSolicitarAsesoria destinatarioId={id ?? ''} remitenteId={currentUser?.id ?? ''} /> : <></>
@@ -156,10 +157,26 @@ export const ProfileUser = () => {
                   id === currentUser?.id ? <Pencil className="ml-auto cursor-pointer"/> : <></>
                 }
               </div>
-              <p className="font-medium">{usuario.grado_academico.nombre} en {usuario.carrera_profesional.nombre}</p>
+              <p className="text-[0.875rem] md:text-base font-medium">{usuario.grado_academico?.nombre} en {usuario.carrera_profesional?.nombre}</p>
+              <p className="text-[0.875rem] md:text-base font-medium">{usuario.universidad?.nombre ?? '-'}</p>
+              {
+                usuario.orcid === ''
+                ? (<></>)
+                : (
+                  <a className="flex gap-1 items-center cursor-pointer" href={`https://orcid.org/${usuario.orcid}`} target="_blank">
+                    <img src={logoOrcid} alt="logo-orcid" className="w-5"/>
+                    <div className="flex gap-1 items-center">
+                      <p className="text-primary underline-offset-4 hover:underline cursor-pointer m-0 break-all text-[0.875rem] md:">{usuario.orcid}</p> 
+                      <SquareArrowOutUpRight size={16} className="text-primary"/>
+                    </div>
+                  </a>
+                )
+              }
+              
             </div>
             
           </article>
+          {/* Especialidades */}
           <article className="">
             <header className="flex justify-between">
               <h4 className="font-semibold">Especialidades</h4>

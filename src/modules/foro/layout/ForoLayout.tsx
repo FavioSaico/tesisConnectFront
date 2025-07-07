@@ -6,6 +6,8 @@ import { getCategorias, getEstados } from "../services/ForoApi";
 import { OptionsUser } from "@/modules/profile/components/OptionsUser";
 import logo from "/logo_ico.png";
 import filtrar_ico from "/filtrar_ico.png";
+import { Searcher } from "@/modules/profile/components/Searcher";
+import { X } from "lucide-react";
 
 export const ForoLayout = () => {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -56,7 +58,7 @@ export const ForoLayout = () => {
         <div className="logo_container max-w-14">
           <img src={logo} alt="logo_tesisconnect" className="w-full" />
         </div>
-        <h1 className="text-3xl font-bold text-blue-950 text-center">Foro Académico</h1>
+        <Searcher/>
         <OptionsUser />
       </header>
 
@@ -66,7 +68,7 @@ export const ForoLayout = () => {
         <div className="fixed bottom-6 right-6 z-40 md:hidden">
           <button
             onClick={() => setMostrarFiltro(true)}
-            className="bg-blue-600 text-white p-3 rounded-full shadow-lg"
+            className="bg-blue-600 text-white p-3 rounded-full shadow-xl/30 "
             aria-label="Mostrar filtros"
           >
             <div className="logo_container max-w-7">
@@ -102,9 +104,9 @@ export const ForoLayout = () => {
           >
             <button
               onClick={() => setMostrarFiltro(false)}
-              className="absolute top-6 right-8 text-red-500 font-bold text-2xl"
+              className="absolute top-5 right-4 text-black font-bold text-2xl"
             >
-              ✖
+              <X />
             </button>
 
             <FiltroPublicaciones

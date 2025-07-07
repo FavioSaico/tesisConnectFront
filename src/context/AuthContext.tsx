@@ -8,7 +8,7 @@ type SessionContextType = {
   setUserLS: (user: AuthResponse) => Promise<void>
   logout: () => Promise<void>
   isLoading: boolean
-
+  called: boolean
 }
 
 interface UserData {
@@ -25,7 +25,7 @@ export function SessionProvider ({ children } : { children: ReactNode }) {
   // const [authenticated, setAuthenticate] = useState<boolean>(false);
   // const [loading, setIsLoading] = useState<boolean>(true);
 
-  const [ getUserAuthenticated, { loading: isLoading }] = useLazyQuery<UserData>(GET_USER_AUTHENTICATED);
+  const [ getUserAuthenticated, { loading: isLoading, called}] = useLazyQuery<UserData>(GET_USER_AUTHENTICATED);
   // const { data, loading: isLoading } = useQuery<UserData>(GET_USER_AUTHENTICATED, {
   //   fetchPolicy: 'network-only'
   // });
@@ -83,7 +83,8 @@ export function SessionProvider ({ children } : { children: ReactNode }) {
       user, 
       setUserLS, 
       logout, 
-      isLoading
+      isLoading,
+      called
     }}>
       {children}
     </SessionContext.Provider>

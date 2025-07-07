@@ -11,12 +11,16 @@ import { ForoRoutes } from "@/modules/foro/routes/ForoRoutes";
 import { ForoPage } from "@/modules/foro/pages/Foro"
 import { ForoLayout } from "@/modules/foro/layout/ForoLayout"
 import { PublicacionPage } from "@/modules/foro/pages/Publicacion"
+import { SearchLayout } from "@/modules/search/layout/SearchLayout"
+import { SearchPage } from "@/modules/search/pages/SearchPage"
 
 export const AppRouter = () => {
 
-  const { user, isLoading } = useSession()
+  const { user, isLoading, called } = useSession()
 
-  if(isLoading) {
+  console.log('context',isLoading)
+
+  if(isLoading || !called) {
     return (
       <div className="userSection md:col-span-2 flex flex-col gap-3">
         <Loader2 className="animate-spin text-primary mx-auto" size={40}/>
@@ -26,12 +30,18 @@ export const AppRouter = () => {
 
   return (
     <>
+    
       <Routes>
-        {/* {ForoRoutes} */}
-        {
-          user 
-          ? (
-            <>
+        {ForoRoutes}
+        <Route path="search" element={
+          <SearchLayout>
+            <SearchPage/> 
+          </SearchLayout>
+        }/>
+        
+          {/* // user 
+          // ? (
+          //   <> */}
               <Route path="profile">
                 <Route element={<ProfileLayout/>}>
                   <Route path=":id" element={<ProfilePage/>}/>
@@ -41,11 +51,12 @@ export const AppRouter = () => {
                 <Route index element={<ForoPage />} />
                 <Route path="publicacion/:id" element={<PublicacionPage />} />
               </Route>
-              <Route path='/*' element={ <Navigate to={`/profile/${user.usuario.id}`} /> }/> 
-            </>
-          )
-          : (
-            <>
+
+              <Route path='/*' element={ <Navigate to={`/profile/${user?.usuario.id}`} /> }/> 
+          {/* //   </>
+          // )
+          // : (
+          //   <>  */}
               <Route path="auth">
                 <Route element={<AuthLayout/>}>
                   <Route path='login' element={<LoginPage/>}/>
@@ -53,9 +64,9 @@ export const AppRouter = () => {
                 </Route>
               </Route>
               <Route path='/*' element={ <Navigate to='/auth/login' />  } />
-            </>
-          )
-        }
+          {/* //   </>
+          // ) */}
+        
         
       </Routes>
       <Toaster />

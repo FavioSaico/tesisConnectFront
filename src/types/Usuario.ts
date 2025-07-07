@@ -17,6 +17,7 @@ export interface Usuario {
     carrera_profesional: CarreraProfesional;
     especialidades:      Especialidad[];
     publicaciones:       Publicacion[];
+    universidad:         UniversidadItem
 }
 
 export interface Especialidad {

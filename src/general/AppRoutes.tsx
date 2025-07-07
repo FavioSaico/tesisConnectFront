@@ -18,7 +18,7 @@ export const AppRouter = () => {
 
   const { user, isLoading, called } = useSession()
 
-  console.log('context',isLoading)
+  // console.log('context',isLoading)
 
   if(isLoading || !called) {
     return (

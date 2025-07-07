@@ -5,10 +5,12 @@ import { Publicacion, Categoria } from "@/types/Publicacion";
 import { PublicacionCard } from "../components/PublicacionCard";
 import { FormNuevaPublicacion } from "../components/FormNuevaPublicacion";
 import { FiltroValues } from "../components/FiltroPublicaciones";
+import { Loader2 } from "lucide-react";
 
 type ContextType = { filtros: FiltroValues};
 
 export const ForoPage = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [publicaciones, setPublicaciones] = useState<Publicacion[]>([]);
   const [usuariosCache, setUsuariosCache] = useState<Map<number, string>>(new Map());
   const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -24,8 +26,11 @@ export const ForoPage = () => {
   // Cargar publicaciones
   const cargarPublicaciones = async () => {
     try {
+      setIsLoading(true)
       const data = await getPublicaciones({});
       setPublicaciones(data);
+
+      setIsLoading(false)
     } catch (err) {
       setError("Error al obtener publicaciones");
       console.error(err);
@@ -95,6 +100,8 @@ export const ForoPage = () => {
       return 0;
     });
 
+    console.log(isLoading)
+
   return (
     <>
       <div className="space-y-4">
@@ -105,13 +112,25 @@ export const ForoPage = () => {
 
         {error && <p className="text-red-500">{error}</p>}
 
-        {publicacionesFiltradas.map((p) => (
-          <PublicacionCard
-            key={p.idPublicacion}
-            publicacion={p}
-            nombreAutor={usuariosCache.get(p.idUsuario)}
-          />
-        ))}
+        {
+          isLoading ? 
+          (<div className="userSection md:col-span-2 flex flex-col gap-3">
+            <Loader2 className="animate-spin text-primary mx-auto" size={40}/>
+          </div>)
+          : (
+            <>
+            {publicacionesFiltradas.map((p) => (
+              <PublicacionCard
+                key={p.idPublicacion}
+                publicacion={p}
+                nombreAutor={usuariosCache.get(p.idUsuario)}
+              />
+            ))}
+            </>
+          )
+        }
+
+        
       </div>
     </>
   );

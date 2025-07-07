@@ -56,7 +56,7 @@ export const FiltroPublicaciones = ({ categorias, estados, onFiltrar, initialVal
   }, [initialValues, reset]);
 
   const onSubmit = (data: FiltroValues) => {
-    console.log("Filtros buscados:", data);
+    // console.log("Filtros buscados:", data);
     const filtro: FiltroValues = {
       texto: data.texto,
       categorias: data.categorias, 

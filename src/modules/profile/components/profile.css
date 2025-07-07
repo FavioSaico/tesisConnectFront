@@ -12,6 +12,13 @@
   animation: spin 1s linear infinite;
 }
 
+.descriptionLimit {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);

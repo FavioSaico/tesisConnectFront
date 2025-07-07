@@ -56,6 +56,8 @@ export const Recomendations = () => {
 
   const { user } = useSession()
 
+  console.log(user)
+
   async function obtenerRecomendacionesWithId() {
     setLoading(true);
     const usuario = user?.usuario;
@@ -203,7 +205,7 @@ export const Recomendations = () => {
 
   useEffect(()=>{
     obtenerRecomendacionesWithId();
-  }, [])
+  }, [user])
 
   useEffect(() => {
     obtenerDataUsuarioRecomendacionesWithId()

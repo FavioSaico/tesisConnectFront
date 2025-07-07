@@ -11,6 +11,7 @@ import {
   getComentarios,
   getUsuarioSimple,
 } from "../services/ForoApi";
+import { Loader2 } from "lucide-react";
 
 export const PublicacionPage = () => {
   const { id } = useParams();
@@ -98,7 +99,9 @@ export const PublicacionPage = () => {
   }
 
   if (!publicacion) {
-    return <p className="text-center">Cargando publicación...</p>;
+    return (<div className="userSection md:col-span-2 flex flex-col gap-3">
+            <Loader2 className="animate-spin text-primary mx-auto" size={40}/>
+          </div>);
   }
   return (
     <div className="space-y-4">

@@ -17,9 +17,7 @@ import { SearchPage } from "@/modules/search/pages/SearchPage"
 export const AppRouter = () => {
 
   const { user, isLoading, called } = useSession()
-
-  // console.log('context',isLoading)
-
+  
   if(isLoading || !called) {
     return (
       <div className="userSection md:col-span-2 flex flex-col gap-3">
@@ -38,36 +36,27 @@ export const AppRouter = () => {
             <SearchPage/> 
           </SearchLayout>
         }/>
-        
-          {/* // user 
-          // ? (
-          //   <> */}
-              <Route path="profile">
-                <Route element={<ProfileLayout/>}>
-                  <Route path=":id" element={<ProfilePage/>}/>
-                </Route>
-              </Route>
-              <Route path="foro" element={<ForoLayout />}>
-                <Route index element={<ForoPage />} />
-                <Route path="publicacion/:id" element={<PublicacionPage />} />
-              </Route>
+        <Route path="profile">
+          <Route element={<ProfileLayout/>}>
+            <Route path=":id" element={<ProfilePage/>}/>
+          </Route>
+        </Route>
+        <Route path="foro" element={<ForoLayout />}>
+          <Route index element={<ForoPage />} />
+          <Route path="publicacion/:id" element={<PublicacionPage />} />
+        </Route>
+        <Route path="auth">
+          <Route element={<AuthLayout/>}>
+            <Route path='login' element={<LoginPage/>}/>
+            <Route path='register' element={<RegisterPage/>}/>
+          </Route>
+        </Route>
 
-              <Route path='/*' element={ <Navigate to={`/profile/${user?.usuario.id}`} /> }/> 
-          {/* //   </>
-          // )
-          // : (
-          //   <>  */}
-              <Route path="auth">
-                <Route element={<AuthLayout/>}>
-                  <Route path='login' element={<LoginPage/>}/>
-                  <Route path='register' element={<RegisterPage/>}/>
-                </Route>
-              </Route>
-              <Route path='/*' element={ <Navigate to='/auth/login' />  } />
-          {/* //   </>
-          // ) */}
-        
-        
+        {
+          user
+          ? (<Route path='/*' element={ <Navigate to={`/profile/${user?.usuario.id}`} /> }/> )
+          : ( <Route path='/*' element={ <Navigate to='/auth/login' />  } /> )
+        }
       </Routes>
       <Toaster />
     </>

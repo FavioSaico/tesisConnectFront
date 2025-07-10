@@ -12,17 +12,27 @@ import {
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { useState } from "react"
+import { Eye, EyeOff } from "lucide-react"
 
 // esquema del formulario
 const formSchema = z.object({
-  nombre: z.string().min(2),
-  apellidos: z.string().min(2),
+  nombre: z.string().min(2, {
+    message: "El nombre debe tener mínimo 2 letras"
+  }),
+  apellidos: z.string().min(2, {
+    message: "El apellido debe tener mínimo 2 letras"
+  }),
   correo: z.string().email({
     message: "Ingrese un correo electrónico válido"
   }), // campo nombre
-  contrasenia: z.string().min(6, {
-    message: "Ingrese una contraseña válida"
-  }),
+  contrasenia: z.string()
+  .min(6, { message: "Ingrese una contraseña válida" })
+  .max(32, "Máximo 32 caracteres")
+  .regex(/[A-Z]/, "Debe contener al menos una letra mayúscula")
+  .regex(/[a-z]/, "Debe contener al menos una letra minúscula")
+  .regex(/[0-9]/, "Debe contener al menos un número")
+  .regex(/[^A-Za-z0-9]/, "Debe contener al menos un símbolo"),
 })
 
 interface Props {
@@ -33,20 +43,28 @@ interface Props {
     correo:  string,
     contrasenia:  string,
   }>) => void;
+  dataPersonal: {
+    nombre: string,
+    apellidos: string,
+    correo: string,
+    contrasenia: string,
+  }
 }
 
-export const PersonalDataFrom: React.FC<Props> = ({setNextPage, setDataPersonal}) => {
+export const PersonalDataFrom: React.FC<Props> = ({setNextPage, setDataPersonal, dataPersonal}) => {
 
   // useform se basa en el tipo definido en el schema
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema), // resolver para hacer las validaciones
     defaultValues: {
-      nombre: "",
-      apellidos: "",
-      correo: "",
-      contrasenia: "",
+      nombre: dataPersonal.nombre,
+      apellidos: dataPersonal.apellidos,
+      correo: dataPersonal.correo,
+      contrasenia: dataPersonal.contrasenia,
     },
   })
+
+  const [showPassword, setShowPassword] = useState(false);
   
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -109,9 +127,23 @@ export const PersonalDataFrom: React.FC<Props> = ({setNextPage, setDataPersonal}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Contraseña</FormLabel>
-                <FormControl>
-                  <Input placeholder="Escribe tu contraseña" type="password" {...field} />
-                </FormControl>
+                <div className="flex items-center relative">
+                  <FormControl>
+                    <Input 
+                      placeholder="Escribe tu contraseña" 
+                      type={showPassword ? "text" : "password"}
+                      {...field} 
+                    />
+                  </FormControl>
+                  <div className="flex p-1 px-2 hover:bg-gray-200 hover:cursor-pointer h-full items-center rounded-[3px] absolute right-0" onClick={() => setShowPassword(!showPassword)}>
+                    {
+                      showPassword 
+                      ? (<EyeOff />)
+                      : (<Eye />)
+                    }
+                  </div>
+                </div>
+                
                 <FormMessage />
               </FormItem>
             )}

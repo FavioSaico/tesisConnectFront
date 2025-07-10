@@ -26,7 +26,7 @@ export const RegisterPage = () => {
       <h1 className="title-register">Registro de usuario</h1>
         {
           !nextPage 
-          ? (<PersonalDataFrom setNextPage={setNextPage} setDataPersonal={setDataPersonal}/>)
+          ? (<PersonalDataFrom setNextPage={setNextPage} setDataPersonal={setDataPersonal} dataPersonal={dataPersonal}/>)
           : (<AcademicDataFrom setNextPage={setNextPage} dataPersonal={dataPersonal}/>)
         }
         

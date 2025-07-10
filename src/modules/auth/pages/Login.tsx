@@ -17,7 +17,7 @@ import {
 import "./auth.css";
 import { useNavigate } from "react-router"
 import { useState } from "react"
-import { Check, CircleX, Loader2 } from "lucide-react"
+import { Check, CircleX, Eye, EyeOff, Loader2 } from "lucide-react"
 
 import { AuthResponse } from '@/types/Usuario'
 import { useSession } from "@/context/AuthContext"
@@ -41,6 +41,7 @@ const PATH = '/api/auth/login';
 export const LoginPage = () => {
   
   const [isLodingRest, setIsLoading] = useState<boolean>(false)
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -174,9 +175,22 @@ export const LoginPage = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Contraseña</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Escribe tu contraseña" type="password" {...field} />
-                  </FormControl>
+                  <div className="flex items-center relative">
+                    <FormControl>
+                      <Input 
+                        placeholder="Escribe tu contraseña" 
+                        type={showPassword ? "text" : "password"}
+                        {...field} 
+                      />
+                    </FormControl>
+                    <div className="flex p-1 px-2 hover:bg-gray-200 hover:cursor-pointer h-full items-center rounded-[3px] absolute right-0" onClick={() => setShowPassword(!showPassword)}>
+                      {
+                        showPassword 
+                        ? (<EyeOff />)
+                        : (<Eye />)
+                      }
+                    </div>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
